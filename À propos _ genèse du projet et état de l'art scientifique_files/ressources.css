@@ -1,0 +1,818 @@
+/* =============================================================
+   RESSOURCES — feuille de styles partagée des pages ressources
+   Consolide, dans l'ordre de cascade (base → addons → listing → helpers) :
+     1. Base article (ancien resource-article.css)
+     2. Addons Stratégie IA (ancien strategie-ia.css)
+     3. Addons Rapport IGAS (ancien rapport-igas.css)
+     4. Addons Cour des comptes (ancien rapport-cour-des-comptes.css)
+     5. Listing de la page index ressources
+     6. Helpers communs (labels, KPI, liens, closing, newsletter)
+   Le CSS lourd spécifique à une page vit dans un fichier dédié
+   (ex. acces-soins.css, atlas-demographie.css).
+   ============================================================= */
+
+
+/* ============================================================= */
+/* 1. BASE ARTICLE                                               */
+/* ============================================================= */
+
+.rapport-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 24px;
+}
+
+.rapport-meta-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    background: var(--color-background-200);
+    border-radius: 100px;
+    font-size: .78rem;
+    font-weight: 600;
+    color: var(--color-action-500);
+}
+
+.article-updated {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 20px;
+    font-size: .8rem;
+    color: var(--color-text-muted);
+    font-style: italic;
+}
+
+.article-updated svg {
+    flex-shrink: 0;
+    opacity: .7;
+}
+
+.article-updated time {
+    font-style: normal;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+}
+
+.download-block {
+    text-align: center;
+    padding: 32px 0;
+}
+
+.download-block .btn.disabled {
+    opacity: .5;
+    pointer-events: none;
+    cursor: not-allowed;
+}
+
+.download-mention {
+    font-size: .8rem;
+    color: var(--color-text-subtle);
+    margin-top: 10px;
+}
+
+.kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 24px;
+}
+
+.kpi-grid--3 {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.kpi-card {
+    background: var(--color-background-300);
+    border-radius: var(--radius-lg);
+    padding: 28px 20px;
+    text-align: center;
+}
+
+.kpi-value {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--color-content-600);
+    line-height: 1;
+    margin-bottom: 8px;
+}
+
+.kpi-label {
+    font-size: .85rem;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    margin-bottom: 6px;
+    line-height: 1.3;
+}
+
+.kpi-source {
+    font-size: .7rem;
+    color: var(--color-text-muted);
+    font-style: italic;
+    line-height: 1.3;
+}
+
+.reco-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: .9rem;
+    line-height: 1.5;
+}
+
+.reco-table thead tr {
+    background: var(--color-background-200);
+    text-align: left;
+}
+
+.reco-table th {
+    padding: 12px 16px;
+    font-weight: 600;
+    border-bottom: 2px solid var(--color-background-300);
+    white-space: nowrap;
+}
+
+.reco-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--color-background-200);
+    vertical-align: top;
+}
+
+.reco-table .reco-num {
+    font-weight: 700;
+    color: var(--color-action-500);
+    text-align: center;
+    width: 40px;
+}
+
+.mps-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+
+.mps-card {
+    background: var(--color-content-700);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+}
+
+.mps-card h3 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--color-background-50);
+    margin-bottom: 12px;
+    line-height: 1.3;
+}
+
+.mps-card p {
+    font-size: .9rem;
+    color: rgba(255, 255, 255, .7);
+    line-height: 1.6;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 900px) {
+    .kpi-grid,
+    .kpi-grid--3 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .mps-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .reco-table {
+        font-size: .8rem;
+    }
+
+    .reco-table th,
+    .reco-table td {
+        padding: 8px 10px;
+    }
+}
+
+@media (max-width: 640px) {
+    .kpi-grid,
+    .kpi-grid--3 {
+        grid-template-columns: 1fr;
+    }
+
+    .rapport-meta {
+        gap: 8px;
+    }
+}
+
+/* ===== Table column highlight ===== */
+.article-table .col-highlight {
+    background: var(--color-background-300);
+}
+
+/* ===== CCMU STEPPER (uses .steps system) ===== */
+.steps-ccmu {
+    grid-template-columns: repeat(5, 1fr);
+    margin: 32px 0;
+}
+
+/* Color overrides for CCMU step-numbers */
+.step-number--green { background: var(--color-positive-100); }
+.step-number--green.active { background: var(--color-positive-500); box-shadow: 0 0 0 4px rgba(34, 197, 94, .2); }
+.step-number--orange { background: var(--color-warning-100); }
+.step-number--orange.active { background: var(--color-warning-700); box-shadow: 0 0 0 4px rgba(230, 126, 34, .2); }
+.step-number--red { background: var(--color-important-100); }
+.step-number--red.active {  background: var(--color-important-800); box-shadow: 0 0 0 4px rgba(239, 68, 68, .2); }
+
+/* Force SVG to fit inside step-ico */
+.steps-ccmu .step-ico svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+/* Progress bar color: green → orange → red gradient */
+.steps-ccmu::after {
+    background: linear-gradient(to right, var(--color-positive-700) 20%, var(--color-warning-700) 60%, var(--color-important-800) 80%);
+}
+
+/* CCMU tags */
+.ccmu-tag {
+    display: inline-block;
+    font-size: .65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .03em;
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-top: 6px;
+}
+
+.ccmu-tag--green { background: var(--color-positive-100); color: var(--color-positive-700); margin-bottom: 12px; }
+.ccmu-tag--orange { background: #fef3c7; color: var(--color-warning-700);  margin-bottom: 12px; }
+.ccmu-tag--red { background: #fee2e2;  color: var(--color-important-800);  margin-bottom: 12px; }
+
+/* ===== CCMU stepper mobile ===== */
+@media (max-width: 900px) {
+    .steps-ccmu {
+        grid-template-columns: 1fr;
+    }
+
+    .steps-ccmu::after {
+        background: linear-gradient(to bottom, var(--color-positive-500) 0%, var(--color-positive-500) 35%, #e67e22 50%, var(--color-important-500) 75%);
+    }
+}
+
+/* ===== Article table mobile → cards ===== */
+@media (max-width: 900px) {
+    .article-table--cards thead {
+        display: none;
+    }
+
+    .article-table--cards,
+    .article-table--cards tbody,
+    .article-table--cards tr,
+    .article-table--cards td {
+        display: block;
+        width: 100%;
+    }
+
+    .article-table--cards tr {
+        margin-bottom: 16px;
+        background: var(--color-background-200);
+        border-radius: var(--radius-lg);
+        padding: 16px;
+    }
+
+    .article-table--cards td {
+        padding: 4px 0;
+        border-bottom: none;
+    }
+
+    .article-table--cards td:first-child {
+        font-size: .85rem;
+        color: var(--color-action-500);
+        margin-bottom: 8px;
+    }
+
+    .article-table--cards td::before {
+        content: attr(data-label);
+        display: block;
+        font-size: .7rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: .04em;
+        color: var(--color-text-muted);
+        margin-bottom: 2px;
+    }
+
+    .article-table--cards td:first-child::before {
+        display: none;
+    }
+}
+
+
+/* ============================================================= */
+/* 2. ADDONS — Stratégie IA                                      */
+/* ============================================================= */
+
+.thematiques-list {
+    padding-left: 24px;
+    font-size: .95rem;
+    color: var(--color-text-body);
+    line-height: 2;
+}
+
+.thematiques-list li strong {
+    color: var(--color-action-500);
+}
+
+.confiance-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: .9rem;
+    line-height: 1.5;
+}
+
+.confiance-table thead tr {
+    background: var(--color-background-300);
+    text-align: left;
+}
+
+.confiance-table th {
+    padding: 12px 16px;
+    font-weight: 600;
+    border-bottom: 2px solid var(--color-background-300);
+}
+
+.confiance-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--color-background-200);
+    vertical-align: top;
+}
+
+.confiance-table td:first-child {
+    font-weight: 700;
+    color: var(--color-foreground);
+    white-space: nowrap;
+}
+
+.connexion-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+}
+
+.connexion-card {
+    background: var(--color-background-300);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+}
+
+.connexion-card h3 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--color-foreground);
+    margin-bottom: 12px;
+    line-height: 1.3;
+}
+
+.connexion-card p {
+    font-size: .9rem;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+}
+
+.article-highlight-box {
+    margin: 32px -24px;
+    padding: 24px;
+    background: var(--color-background-200);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 900px) {
+    .connexion-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .confiance-table {
+        font-size: .8rem;
+    }
+
+    .confiance-table th,
+    .confiance-table td {
+        padding: 8px 10px;
+    }
+}
+/* NB : la règle .rapport-meta @media(640) de strategie-ia.css est
+   redondante avec celle de la base ci-dessus — supprimée. */
+
+
+/* ============================================================= */
+/* 3. ADDONS — Rapport IGAS                                      */
+/* ============================================================= */
+
+.modeles-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    margin-bottom: 32px;
+}
+
+.modele-card {
+    background: var(--color-background-300);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+}
+
+.modele-card h3 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--color-foreground);
+    margin-bottom: 16px;
+}
+
+.modele-card ul {
+    padding-left: 20px;
+    font-size: .95rem;
+    color: var(--color-text-body);
+    line-height: 1.8;
+}
+
+.scenarios-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+}
+
+.scenario-card {
+    background: var(--color-background-100);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+    position: relative;
+}
+
+.scenario-card.scenario-preferred {
+    background: var(--color-background-500);
+}
+
+.scenario-preferred-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    background: var(--color-action-500);
+    color: var(--color-background-50);
+    border-radius: 100px;
+    font-size: .7rem;
+    font-weight: 700;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    margin-top: 12px;
+}
+
+.scenario-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: var(--color-background-300);
+    border-radius: var(--radius-round);
+    font-size: .85rem;
+    font-weight: 700;
+    color: var(--color-action-500);
+    margin-bottom: 12px;
+}
+
+.scenario-preferred .scenario-number {
+    background: rgba(255, 255, 255, .3);
+    color: var(--color-action-600);
+}
+
+.scenario-card h3 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--color-foreground);
+    margin-bottom: 12px;
+    line-height: 1.3;
+}
+
+.scenario-card p {
+    font-size: .9rem;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+}
+
+.article-section--full {
+    background: var(--color-background-300);
+}
+
+.article-cta-wrap {
+    display: flex;
+    gap: 16px;
+    margin-top: 32px;
+    justify-content: center;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 900px) {
+    .modeles-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .scenarios-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+/* ============================================================= */
+/* 4. ADDONS — Cour des comptes                                  */
+/* ============================================================= */
+/* NB : .kpi-card, .article-section--full et .article-cta-wrap de
+   rapport-cour-des-comptes.css étaient identiques/redondants avec
+   ci-dessus — non répétés. .article-section{background:unset} était
+   un no-op (aucun background global) — omis. */
+
+.constats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+}
+
+.constat-card {
+    background: var(--color-background-100);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+}
+
+.constat-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: var(--color-background-300);
+    border-radius: var(--radius-round);
+    font-size: .85rem;
+    font-weight: 700;
+    color: var(--color-action-500);
+    margin-bottom: 12px;
+}
+
+.constat-card h3 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--color-foreground);
+    margin-bottom: 12px;
+    line-height: 1.3;
+}
+
+.constat-card p {
+    font-size: .9rem;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 900px) {
+    .constats-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+/* ============================================================= */
+/* 5. LISTING — page index ressources                            */
+/* ============================================================= */
+
+.ressources-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 40px;
+}
+
+.ressources-filter {
+    padding: 6px 16px;
+    border-radius: 100px;
+    font-size: .8rem;
+    font-weight: 600;
+    border: 1px solid var(--color-border);
+    background: transparent;
+    color: var(--color-text-secondary);
+    transition: all .2s;
+}
+
+.ressources-filter:hover {
+    border-color: var(--color-action-500);
+    color: var(--color-action-500);
+}
+
+.ressources-filter.active {
+    background: var(--color-action-500);
+    color: var(--color-background-50);
+    border-color: var(--color-action-500);
+}
+
+.ressources-grid-section {
+    max-width: 1200px;
+}
+
+.ressources-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+}
+
+.ressource-card {
+    background: var(--color-background-100);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+    text-decoration: none;
+    color: inherit;
+    transition: transform .2s, box-shadow .2s;
+    display: flex;
+    flex-direction: column;
+}
+
+.ressource-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(3, 36, 92, .1);
+}
+
+.ressource-card--pinned {
+    background: var(--color-background-200);
+    position: relative;
+}
+
+.ressource-card--pinned .ressource-tag {
+    background: var(--color-background-100);
+}
+
+.ressource-card-pin {
+    position: absolute;
+    top: 32px;
+    right: 32px;
+    width: 20px;
+    height: 20px;
+    color: var(--color-action-600);
+}
+
+.ressource-card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 16px;
+}
+
+.ressource-tag {
+    display: inline-block;
+    padding: 3px 10px;
+    background: var(--color-background-200);
+    border-radius: 100px;
+    font-size: .7rem;
+    font-weight: 600;
+    color: var(--color-action-500);
+    text-transform: uppercase;
+    letter-spacing: .05em;
+}
+
+.ressource-card h2 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-foreground);
+    margin-bottom: 12px;
+    line-height: 1.3;
+}
+
+.ressource-card p {
+    font-size: .875rem;
+    color: var(--color-text-muted);
+    line-height: 1.6;
+    flex: 1;
+}
+
+.ressource-card-date {
+    font-size: .75rem;
+    color: var(--color-text-faint);
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid var(--color-border);
+}
+
+.ressource-card-arrow {
+    color: var(--color-action-500);
+    font-weight: 600;
+    font-size: .85rem;
+    margin-top: 16px;
+}
+
+
+/* ============================================================= */
+/* 6. HELPERS COMMUNS (ex blocs <style> inline)                  */
+/* ============================================================= */
+
+.article-labels { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
+
+.kpi-value--positive { color: var(--color-positive-700); }
+.kpi-value--important { color: var(--color-important-800); }
+.kpi-value--action { color: var(--color-action-500); }
+
+.article-link {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-weight: 700; color: var(--color-action-500); text-decoration: none;
+}
+.article-link:hover { text-decoration: underline; }
+
+/* ===== Appels de note et bibliographie ===== */
+/* Exposant cliquable renvoyant a l'entree correspondante de .ref-list. */
+.ref-sup {
+    font-size: .65em;
+    line-height: 0;
+    vertical-align: super;
+    margin-left: 1px;
+}
+.ref-sup a {
+    color: var(--color-action-500);
+    font-weight: 700;
+    text-decoration: none;
+    padding: 0 1px;
+}
+.ref-sup a:hover,
+.ref-sup a:focus-visible { text-decoration: underline; }
+
+/* Sur fond sombre (.mps-card), l'action-500 ne passe pas. */
+.mps-card .ref-sup a { color: var(--color-background-50); opacity: .75; }
+.mps-card .ref-sup a:hover { opacity: 1; }
+
+.ref-list {
+    max-width: 860px;
+    margin: 0 auto;
+    padding-left: 24px;
+    list-style: decimal;
+}
+.ref-list li {
+    font-size: .9rem;
+    line-height: 1.6;
+    color: var(--color-text-secondary);
+    margin-bottom: 16px;
+    padding-left: 4px;
+}
+.ref-list li::marker { color: var(--color-action-500); font-weight: 700; }
+.ref-list li:target { background: var(--color-background-100); border-radius: var(--radius-md); }
+.ref-list .article-link { font-size: .85rem; }
+
+/* ===== Closing quote ===== */
+.article-closing {
+    padding: 32px 40px 0; text-align: center; position: relative;
+    max-width: 860px; margin: 40px auto 0;
+}
+.article-closing::before {
+    content: "\201C"; font-size: 4rem; color: var(--color-action-500);
+    line-height: 1; display: block; margin-bottom: -8px;
+}
+.article-closing p {
+    font-size: 1.1rem; font-style: italic; color: var(--color-text-secondary);
+    max-width: 720px; margin: 0 auto; line-height: 1.7;
+}
+.article-closing strong {
+    display: block; color: var(--color-action-500); font-style: normal;
+    font-size: 1.2rem; margin-bottom: 8px;
+}
+
+/* ===== Newsletter signup ===== */
+.newsletter-card {
+    background: var(--color-background-50, #fff); border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg); padding: 48px; max-width: 760px; margin: 0 auto;
+}
+.newsletter-text { text-align: center; margin-bottom: 28px; }
+.newsletter-text h2 { font-size: 1.6rem; font-weight: 700; color: var(--color-foreground); margin: 0 0 12px; line-height: 1.25; }
+.newsletter-text p { font-size: .95rem; color: var(--color-text-secondary); line-height: 1.6; margin: 0; }
+.newsletter-form-row { display: grid; grid-template-columns: 1fr 2fr; gap: 12px; margin-bottom: 16px; }
+.newsletter-form input[type=email], .newsletter-form input[type=text] {
+    width: 100%; padding: 14px 16px; border: 1px solid var(--color-border); border-radius: 8px;
+    font-size: .95rem; font-family: inherit; background: var(--color-background-100);
+    color: var(--color-foreground); transition: border-color .15s;
+}
+.newsletter-form input[type=email]:focus, .newsletter-form input[type=text]:focus { outline: none; border-color: var(--color-action-500); }
+.newsletter-form input.has-error { border-color: #d4351c; }
+.newsletter-checkbox {
+    display: flex; align-items: flex-start; gap: 10px; font-size: .82rem;
+    color: var(--color-text-secondary); margin-bottom: 20px; cursor: pointer; line-height: 1.5;
+}
+.newsletter-checkbox input { margin-top: 3px; flex-shrink: 0; }
+.newsletter-submit { width: 100%; padding: 14px; font-size: 1rem; }
+.newsletter-note { font-size: .78rem; color: var(--color-text-secondary); opacity: .75; text-align: center; margin: 14px 0 0; }
+.newsletter-success { text-align: center; padding: 24px 0; display: none; }
+.newsletter-success.active { display: block; }
+.newsletter-success h3 { font-size: 1.3rem; color: var(--color-action-500); margin: 0 0 10px; }
+.newsletter-success p { color: var(--color-text-secondary); margin: 0; }
+.newsletter-sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
+@media (max-width: 640px) {
+    .newsletter-card { padding: 32px 24px; }
+    .newsletter-form-row { grid-template-columns: 1fr; }
+}

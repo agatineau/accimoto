@@ -1,0 +1,2053 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Triumph Daytona 675 — Éclaté 3D interactif</title>
+<style>
+  :root{
+    --gold:#d4af37;
+    --gold-dim:#9a7d2e;
+    --ink:#e8e6e0;
+    --ink-dim:#8a8880;
+    --bg:#050507;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-user-select:none;user-select:none}
+  #app{position:fixed;inset:0}
+  canvas#c{display:block;width:100%;height:100%;touch-action:none;cursor:grab}
+  canvas#c.dragging{cursor:grabbing}
+
+  /* vignette studio */
+  #vignette{position:absolute;inset:0;pointer-events:none;
+    background:radial-gradient(ellipse 90% 80% at 50% 42%, transparent 55%, rgba(0,0,0,.55) 100%)}
+
+  /* ------- HUD ------- */
+  .hud{position:absolute;pointer-events:none;z-index:5}
+  #title{top:28px;left:32px}
+  #title h1{font-size:clamp(18px,2.4vw,28px);letter-spacing:.32em;font-weight:800;color:var(--ink)}
+  #title h1 b{color:var(--gold);font-weight:800}
+  #title p{margin-top:6px;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-dim)}
+  #title .rule{width:64px;height:2px;background:linear-gradient(90deg,var(--gold),transparent);margin-top:12px}
+
+  #help{left:32px;bottom:28px;display:flex;flex-direction:column;gap:8px;font-size:12.5px;color:var(--ink-dim)}
+  #help .pill{display:flex;align-items:center;gap:10px}
+  #help .key{display:inline-flex;align-items:center;justify-content:center;min-width:34px;height:24px;
+    padding:0 8px;border:1px solid rgba(212,175,55,.35);border-radius:6px;color:var(--gold);
+    font-size:12px;background:rgba(212,175,55,.06)}
+
+  #readout{right:96px;bottom:30px;text-align:right}
+  #readout .big{font-size:30px;font-weight:200;color:var(--ink);font-variant-numeric:tabular-nums}
+  #readout .big b{color:var(--gold);font-weight:600}
+  #readout .lab{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-dim);margin-top:2px}
+
+  /* ------- boutons ------- */
+  #actions{position:absolute;top:28px;right:32px;display:flex;gap:10px;z-index:6}
+  .btn{pointer-events:auto;cursor:pointer;border:1px solid rgba(232,230,224,.18);border-radius:8px;
+    background:rgba(10,10,14,.55);backdrop-filter:blur(6px);color:var(--ink-dim);
+    font-size:12px;letter-spacing:.08em;padding:9px 14px;transition:all .2s}
+  .btn:hover{color:var(--ink);border-color:rgba(212,175,55,.5)}
+  .btn.on{color:var(--gold);border-color:var(--gold);background:rgba(212,175,55,.08)}
+
+  /* ------- curseur vertical d'éclaté ------- */
+  #slider{position:absolute;right:34px;top:50%;transform:translateY(-50%);height:min(46vh,380px);width:36px;
+    z-index:6;pointer-events:auto;cursor:pointer;touch-action:none}
+  #slider .track{position:absolute;left:50%;top:0;bottom:0;width:3px;transform:translateX(-50%);
+    background:rgba(232,230,224,.14);border-radius:2px}
+  #slider .fill{position:absolute;left:50%;bottom:0;width:3px;transform:translateX(-50%);
+    background:linear-gradient(180deg,var(--gold),var(--gold-dim));border-radius:2px;height:0%}
+  #slider .knob{position:absolute;left:50%;bottom:0%;width:15px;height:15px;border-radius:50%;
+    transform:translate(-50%,50%);background:#0c0c10;border:2px solid var(--gold);
+    box-shadow:0 0 12px rgba(212,175,55,.35)}
+  #slider .cap{position:absolute;left:50%;transform:translateX(-50%);font-size:10px;letter-spacing:.2em;
+    color:var(--ink-dim);text-transform:uppercase;white-space:nowrap}
+  #slider .cap.top{top:-24px} #slider .cap.bot{bottom:-24px}
+
+  /* ------- tooltip pièce ------- */
+  #tip{position:absolute;z-index:8;pointer-events:none;opacity:0;transition:opacity .12s;
+    background:rgba(8,8,11,.85);border:1px solid rgba(212,175,55,.4);color:var(--ink);
+    font-size:12px;letter-spacing:.06em;padding:6px 11px;border-radius:6px;backdrop-filter:blur(4px)}
+  #tip b{color:var(--gold)}
+
+  /* ------- mode catalogue : photo réelle à 0 % ------- */
+  #photoStage{position:absolute;inset:0;z-index:4;background:#fbfbfb;display:flex;
+    align-items:center;justify-content:center;opacity:0;pointer-events:none}
+  #photoStage img{max-width:min(92%,1100px);max-height:86%;object-fit:contain}
+  #vignette{transition:opacity .35s}
+  body.photo #vignette{opacity:0}
+  body.photo #title h1{color:#17181c}
+  body.photo #title p,body.photo #help,body.photo #slider .cap{color:#6b6c72}
+  body.photo .btn{color:#4a4b52;border-color:rgba(20,20,25,.22);background:rgba(255,255,255,.65)}
+  body.photo .btn:hover{color:#17181c;border-color:#9a7d2e}
+  body.photo .btn.on{color:#8a6d1e;border-color:#9a7d2e;background:rgba(154,125,46,.10)}
+  body.photo #readout .big{color:#17181c}
+  body.photo #slider .track{background:rgba(20,20,25,.18)}
+  body.photo #slider .knob{background:#fff}
+  body.photo #tip{background:rgba(255,255,255,.92);color:#17181c;border-color:rgba(154,125,46,.5)}
+  body.photo #modelHint{opacity:0}
+
+  /* ------- fiche pièce (clic sur un bloc) ------- */
+  #partCard{position:absolute;top:120px;left:32px;z-index:7;width:264px;
+    background:rgba(10,10,14,.78);border:1px solid rgba(212,175,55,.45);border-radius:12px;
+    padding:16px 18px;backdrop-filter:blur(8px);opacity:0;transform:translateY(-6px);
+    pointer-events:none;transition:opacity .25s,transform .25s}
+  #partCard.show{opacity:1;transform:none;pointer-events:auto}
+  #partCard .pc-name{font-size:15px;font-weight:700;color:var(--ink);letter-spacing:.04em;padding-right:18px}
+  #partCard .pc-cat{font-size:11px;color:var(--ink-dim);letter-spacing:.08em;margin-top:5px;text-transform:uppercase}
+  #partCard a{display:inline-block;margin-top:12px;font-size:12px;color:var(--gold);
+    text-decoration:none;border:1px solid rgba(212,175,55,.4);border-radius:7px;padding:7px 11px;
+    transition:background .2s}
+  #partCard a:hover{background:rgba(212,175,55,.12)}
+  #partClose{position:absolute;top:8px;right:10px;background:none;border:none;color:var(--ink-dim);
+    font-size:17px;cursor:pointer;line-height:1}
+  #partClose:hover{color:var(--ink)}
+  @media (max-width:720px){ #partCard{top:auto;bottom:120px;left:16px;width:230px} }
+
+  /* ------- indication modèle ------- */
+  #modelHint{position:absolute;bottom:24px;left:50%;transform:translateX(-50%);z-index:5;
+    font-size:11.5px;color:var(--ink-dim);letter-spacing:.05em;background:rgba(10,10,14,.55);
+    border:1px solid rgba(232,230,224,.12);border-radius:20px;padding:7px 16px;opacity:0;
+    transition:opacity .4s;pointer-events:none;white-space:nowrap;backdrop-filter:blur(6px)}
+  #modelHint.show{opacity:1}
+  #modelHint code{color:var(--gold);font-family:ui-monospace,Menlo,monospace;font-size:11px}
+
+  /* ------- chargement / erreur ------- */
+  #loader{position:fixed;inset:0;z-index:20;background:var(--bg);display:flex;flex-direction:column;
+    align-items:center;justify-content:center;gap:18px;transition:opacity .6s}
+  #loader.done{opacity:0;pointer-events:none}
+  #loader .ring{width:46px;height:46px;border-radius:50%;border:2px solid rgba(212,175,55,.15);
+    border-top-color:var(--gold);animation:spin 1s linear infinite}
+  #loader p{font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:var(--ink-dim)}
+  #loader .err{color:#e08080;letter-spacing:.05em;text-transform:none;max-width:420px;text-align:center;line-height:1.5}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  @media (max-width:720px){
+    #title{top:16px;left:16px;right:70px}
+    #title h1{font-size:17px;letter-spacing:.22em}
+    #title p{font-size:10px;letter-spacing:.12em}
+    #help{display:none}
+    #actions{top:auto;bottom:18px;right:auto;left:16px;flex-wrap:wrap;max-width:70vw}
+    .btn{padding:8px 11px;font-size:11px}
+    #readout{right:64px;bottom:74px}
+    #readout .big{font-size:24px}
+    #slider{right:20px;height:34vh}
+    #modelHint{display:none}
+  }
+</style>
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+</head>
+<body>
+<div id="app">
+  <canvas id="c"></canvas>
+  <div id="vignette"></div>
+
+  <div class="hud" id="title">
+    <h1>TRIUMPH <b>DAYTONA&nbsp;675</b></h1>
+    <p>Éclaté moteur interactif — édition noir &amp; or</p>
+    <div class="rule"></div>
+    <a href="moteur.html" style="pointer-events:auto;color:var(--ink-dim);font-size:11px;letter-spacing:.14em;text-transform:uppercase;text-decoration:none;display:inline-block;margin-top:14px;border-bottom:1px solid rgba(212,175,55,.3);padding-bottom:2px">Moteur 660 seul — éclaté cinématique →</a>
+  </div>
+
+  <div class="hud" id="help">
+    <div class="pill"><span class="key">↔</span> Glisser&nbsp;: rotation 360°</div>
+    <div class="pill"><span class="key">↕</span> Glisser&nbsp;: éclater le moteur</div>
+    <div class="pill"><span class="key">⤾</span> Molette / pincer&nbsp;: zoom</div>
+    <div class="pill"><span class="key">🔍</span> Zoom fort&nbsp;: mécanique à nu</div>
+    <div class="pill"><span class="key">2×</span> Double-clic&nbsp;: réinitialiser</div>
+  </div>
+
+  <div class="hud" id="readout">
+    <div class="big"><b id="pct">0</b>&thinsp;%</div>
+    <div class="lab">Éclaté</div>
+  </div>
+
+  <div id="actions">
+    <button class="btn" id="btnExplode">Vue éclatée</button>
+    <button class="btn" id="btnSpin">Rotation auto</button>
+    <button class="btn" id="btnReset">Réinitialiser</button>
+  </div>
+
+  <div id="slider">
+    <div class="cap top">Éclaté</div>
+    <div class="track"></div>
+    <div class="fill"></div>
+    <div class="knob"></div>
+    <div class="cap bot">Assemblé</div>
+  </div>
+
+  <div id="photoStage"><img id="photoImg" alt="Triumph Daytona 675 — photo catalogue"></div>
+
+  <div id="tip"></div>
+
+  <div id="partCard">
+    <button id="partClose" aria-label="Fermer">×</button>
+    <div class="pc-name" id="partName">—</div>
+    <div class="pc-cat" id="partCat">—</div>
+    <a id="partLink" href="#" target="_blank" rel="noopener">Références d’origine — catalogue ↗</a>
+  </div>
+
+  <div id="modelHint">Maquette stylisée — déposez un modèle dans <code>models/daytona.glb</code> pour le rendu photoréaliste</div>
+
+  <div id="loader">
+    <div class="ring"></div>
+    <p>Chargement du modèle 3D…</p>
+  </div>
+</div>
+
+<script>
+  // Si le module ne charge pas (pas de réseau pour le CDN three.js)
+  window.__threeLoaded = false;
+  setTimeout(() => {
+    if (!window.__threeLoaded) {
+      const l = document.getElementById('loader');
+      l.querySelector('.ring').style.display = 'none';
+      l.querySelector('p').outerHTML =
+        '<p class="err">Le chargement de three.js (CDN) est plus long que prévu.<br>Connexion lente ou hors-ligne — le chargement continue en arrière-plan.</p>';
+    }
+  }, 12000);
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
+import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
+import { Reflector } from 'three/addons/objects/Reflector.js';
+import { buildMoteur660 } from './js/moteur660.js';
+
+/* ============================================================
+   RENDU
+============================================================ */
+function fatalError(msg) {
+  const l = document.getElementById('loader');
+  l.classList.remove('done');
+  l.innerHTML = '<p class="err">' + msg + '</p>';
+}
+const canvas = document.getElementById('c');
+let renderer;
+try {
+  renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+} catch (err) {
+  fatalError('WebGL n’est pas disponible sur ce navigateur ou cette machine.<br>Impossible d’afficher le modèle 3D.');
+  throw err;
+}
+window.__threeLoaded = true;
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.12;
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x050507);
+scene.fog = new THREE.Fog(0x050507, 10, 24);
+
+/* Environnement : RoomEnvironment immédiat, puis HDRI studio photo (Poly Haven, CC0)
+   pour des reflets réalistes façon configurateur */
+const pmrem = new THREE.PMREMGenerator(renderer);
+scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+new RGBELoader().load(
+  'https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/studio_small_09_1k.hdr',
+  hdr => {
+    hdr.mapping = THREE.EquirectangularReflectionMapping;
+    scene.environment = pmrem.fromEquirectangular(hdr).texture;
+    hdr.dispose();
+  },
+  undefined,
+  () => { /* hors-ligne : on garde RoomEnvironment */ }
+);
+
+const camera = new THREE.PerspectiveCamera(38, window.innerWidth / window.innerHeight, 0.05, 60);
+
+/* Lumières studio */
+const key = new THREE.DirectionalLight(0xfff2e0, 2.6);
+key.position.set(2.6, 4.2, 2.4);
+key.castShadow = true;
+key.shadow.mapSize.set(2048, 2048);
+key.shadow.camera.left = -2.6; key.shadow.camera.right = 2.6;
+key.shadow.camera.top = 2.6;  key.shadow.camera.bottom = -2.6;
+key.shadow.camera.near = 1;   key.shadow.camera.far = 12;
+key.shadow.bias = -0.0004;
+key.shadow.normalBias = 0.02;
+scene.add(key);
+
+const rim = new THREE.DirectionalLight(0xbfd4ff, 1.1);
+rim.position.set(-3.2, 2.2, -2.6);
+scene.add(rim);
+
+const fill = new THREE.DirectionalLight(0xffffff, 0.35);
+fill.position.set(0, 1.2, 4);
+scene.add(fill);
+
+scene.add(new THREE.HemisphereLight(0x33363d, 0x0a0a0c, 0.5));
+
+/* Sol studio : miroir réel (façon configurateur) sous un voile dégradé
+   qui laisse le reflet visible au centre et fond au noir sur les bords */
+{
+  const mirror = new Reflector(new THREE.CircleGeometry(9, 64), {
+    clipBias: 0.003,
+    textureWidth: 1024,
+    textureHeight: 1024,
+    color: 0x2a2a30,
+  });
+  mirror.rotation.x = -Math.PI / 2;
+  mirror.position.y = -0.002;
+  scene.add(mirror);
+
+  const cnv = document.createElement('canvas');
+  cnv.width = cnv.height = 512;
+  const g = cnv.getContext('2d');
+  const grad = g.createRadialGradient(256, 256, 30, 256, 256, 256);
+  grad.addColorStop(0, 'rgba(18,18,23,0.62)');
+  grad.addColorStop(0.45, 'rgba(9,9,12,0.86)');
+  grad.addColorStop(1, 'rgba(5,5,7,1)');
+  g.fillStyle = grad;
+  g.fillRect(0, 0, 512, 512);
+  const tex = new THREE.CanvasTexture(cnv);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  const floor = new THREE.Mesh(
+    new THREE.CircleGeometry(9, 64),
+    new THREE.MeshStandardMaterial({ map: tex, transparent: true, roughness: 0.5, metalness: 0.3, envMapIntensity: 0.4 })
+  );
+  floor.rotation.x = -Math.PI / 2;
+  floor.receiveShadow = true;
+  scene.add(floor);
+}
+
+/* ============================================================
+   MATÉRIAUX
+============================================================ */
+const MAT = {
+  paint: new THREE.MeshPhysicalMaterial({ color: 0x0b0b0e, metalness: 0.55, roughness: 0.32, clearcoat: 1, clearcoatRoughness: 0.12 }),
+  plastic: new THREE.MeshStandardMaterial({ color: 0x121316, metalness: 0.2, roughness: 0.62 }),
+  gold: new THREE.MeshStandardMaterial({ color: 0xcfa538, metalness: 1.0, roughness: 0.32 }),
+  goldBright: new THREE.MeshStandardMaterial({ color: 0xdcb44e, metalness: 1.0, roughness: 0.2 }),
+  alu: new THREE.MeshStandardMaterial({ color: 0x9aa0a8, metalness: 0.95, roughness: 0.42 }),
+  aluDark: new THREE.MeshStandardMaterial({ color: 0x5b5f66, metalness: 0.9, roughness: 0.5 }),
+  steel: new THREE.MeshStandardMaterial({ color: 0xa8adb4, metalness: 1.0, roughness: 0.3 }),
+  dark: new THREE.MeshStandardMaterial({ color: 0x1c1e22, metalness: 0.8, roughness: 0.45 }),
+  rubber: new THREE.MeshStandardMaterial({ color: 0x101112, metalness: 0, roughness: 0.92 }),
+  seat: new THREE.MeshStandardMaterial({ color: 0x17181c, metalness: 0.05, roughness: 0.85 }),
+  chain: new THREE.MeshStandardMaterial({ color: 0x41454c, metalness: 1.0, roughness: 0.38 }),
+  glass: new THREE.MeshPhysicalMaterial({ color: 0x0d0f14, transparent: true, opacity: 0.5, roughness: 0.06, metalness: 0, clearcoat: 1, side: THREE.DoubleSide }),
+  headlight: new THREE.MeshStandardMaterial({ color: 0x11131a, emissive: 0xaecdf5, emissiveIntensity: 1.6, roughness: 0.2 }),
+  taillight: new THREE.MeshStandardMaterial({ color: 0x220505, emissive: 0xff2a1a, emissiveIntensity: 1.4, roughness: 0.3 }),
+  radiator: new THREE.MeshStandardMaterial({ color: 0x0e0f12, metalness: 0.85, roughness: 0.7 }),
+  engine: new THREE.MeshStandardMaterial({ color: 0x6a6e74, metalness: 0.92, roughness: 0.5 }),
+  engineDark: new THREE.MeshStandardMaterial({ color: 0x484b50, metalness: 0.9, roughness: 0.55 }),
+};
+
+/* ============================================================
+   OUTILS
+============================================================ */
+function mesh(geo, mat, x = 0, y = 0, z = 0) {
+  const m = new THREE.Mesh(geo, mat);
+  m.position.set(x, y, z);
+  m.castShadow = true;
+  m.receiveShadow = true;
+  return m;
+}
+
+/* cylindre entre deux points */
+function cylBetween(p1, p2, r, mat, radial = 16) {
+  const a = new THREE.Vector3(...p1), b = new THREE.Vector3(...p2);
+  const d = b.clone().sub(a);
+  const m = mesh(new THREE.CylinderGeometry(r, r, d.length(), radial), mat);
+  m.position.copy(a).addScaledVector(d, 0.5);
+  m.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), d.clone().normalize());
+  return m;
+}
+
+/* PRNG déterministe pour la visserie */
+function mulberry32(seed) {
+  return function () {
+    seed |= 0; seed = seed + 0x6D2B79F5 | 0;
+    let t = Math.imul(seed ^ seed >>> 15, 1 | seed);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
+const rand = mulberry32(675);
+
+/* texture texte transparente */
+function textTexture(draw, w = 512, h = 256) {
+  const cnv = document.createElement('canvas');
+  cnv.width = w; cnv.height = h;
+  const g = cnv.getContext('2d');
+  g.clearRect(0, 0, w, h);
+  draw(g, w, h);
+  const tex = new THREE.CanvasTexture(cnv);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.anisotropy = 8;
+  return tex;
+}
+
+/* paire de décalcomanies (gauche/droite), enfant d'un mesh */
+function decalPair(parent, tex, w, h, x, y, z, tiltZ = 0) {
+  for (const side of [1, -1]) {
+    const m = new THREE.Mesh(
+      new THREE.PlaneGeometry(w, h),
+      new THREE.MeshBasicMaterial({ map: tex, transparent: true, toneMapped: false, depthWrite: false })
+    );
+    m.position.set(x, y, side * z);
+    m.rotation.y = side > 0 ? 0 : Math.PI;
+    m.rotation.z = side > 0 ? tiltZ : -tiltZ;
+    m.renderOrder = 2;
+    parent.add(m);
+  }
+}
+
+function extrudeShape(pts, depth, bevel, mat) {
+  const shape = new THREE.Shape(pts.map(p => new THREE.Vector2(p[0], p[1])));
+  const geo = new THREE.ExtrudeGeometry(shape, {
+    depth, bevelEnabled: true, bevelThickness: bevel, bevelSize: bevel * 0.8,
+    bevelSegments: 4, steps: 1, curveSegments: 16
+  });
+  geo.translate(0, 0, -depth / 2);
+  return mesh(geo, mat);
+}
+
+/* ressort hélicoïdal */
+function springMesh(r, coilR, turns, height, mat) {
+  const pts = [];
+  const N = turns * 16;
+  for (let i = 0; i <= N; i++) {
+    const a = (i / 16) * Math.PI * 2;
+    pts.push(new THREE.Vector3(Math.cos(a) * coilR, (i / N) * height, Math.sin(a) * coilR));
+  }
+  const curve = new THREE.CatmullRomCurve3(pts);
+  return mesh(new THREE.TubeGeometry(curve, N * 2, r, 8), mat);
+}
+
+/* ============================================================
+   HIÉRARCHIE + SYSTÈME D'ÉCLATÉ
+   root ── frontG (part vers l'avant)
+        ── rearG  (part vers l'arrière)
+        ── chassisG (réservoir + cadre : montent)
+        ── engineG  (pièces avec offsets individuels)
+============================================================ */
+const root = new THREE.Group();
+scene.add(root);
+/* stylizedG : maquette procédurale (sert d'éclaté détaillé) ;
+   realG : modèle photoréaliste chargé depuis models/ (vue assemblée) */
+const stylizedG = new THREE.Group();
+root.add(stylizedG);
+const frontG = new THREE.Group();
+const rearG = new THREE.Group();
+const chassisG = new THREE.Group();
+const engineG = new THREE.Group();
+stylizedG.add(frontG, rearG, chassisG, engineG);
+
+const exploders = [];
+/* enregistre un objet : offset (Vector3), stagger 0..0.5 (part plus tard) */
+function explodable(obj, off, stagger = 0, label = null) {
+  obj.userData.base = obj.position.clone();
+  obj.userData.off = new THREE.Vector3(...off);
+  obj.userData.stagger = stagger;
+  if (label) obj.userData.label = label;
+  exploders.push(obj);
+  return obj;
+}
+function setLabel(obj, label) { obj.userData.label = label; return obj; }
+
+const smooth = t => t * t * (3 - 2 * t);
+function applyExplode(t) {
+  for (const o of exploders) {
+    const s = o.userData.stagger;
+    const e = smooth(Math.min(1, Math.max(0, (t - s) / (1 - s))));
+    o.position.copy(o.userData.base).addScaledVector(o.userData.off, e);
+  }
+}
+
+/* ============================================================
+   ROUES
+============================================================ */
+function buildWheel(rear) {
+  const g = new THREE.Group();
+  const width = rear ? 1.5 : 1.25;
+
+  const tire = mesh(new THREE.TorusGeometry(0.245, 0.062, 24, 64), MAT.rubber);
+  tire.scale.z = width;
+  g.add(tire);
+
+  const rimBand = mesh(new THREE.TorusGeometry(0.192, 0.02, 12, 48), MAT.gold);
+  rimBand.scale.z = 2.1;
+  g.add(rimBand);
+
+  const hub = mesh(new THREE.CylinderGeometry(0.05, 0.05, 0.13, 20), MAT.gold);
+  hub.rotation.x = Math.PI / 2;
+  g.add(hub);
+
+  for (let i = 0; i < 6; i++) {
+    const a = i * Math.PI / 3;
+    const sp = mesh(new THREE.BoxGeometry(0.155, 0.045, 0.026), MAT.gold);
+    sp.position.set(Math.cos(a) * 0.11, Math.sin(a) * 0.11, 0);
+    sp.rotation.z = a;
+    g.add(sp);
+  }
+
+  if (rear) {
+    const disc = mesh(new THREE.CylinderGeometry(0.105, 0.105, 0.006, 40), MAT.steel, 0, 0, 0.1);
+    disc.rotation.x = Math.PI / 2;
+    g.add(disc);
+    const sprocket = mesh(new THREE.CylinderGeometry(0.095, 0.095, 0.01, 32), MAT.dark, 0, 0, -0.15);
+    sprocket.rotation.x = Math.PI / 2;
+    g.add(sprocket);
+    const carrier = mesh(new THREE.CylinderGeometry(0.035, 0.035, 0.1, 16), MAT.aluDark, 0, 0, -0.1);
+    carrier.rotation.x = Math.PI / 2;
+    g.add(carrier);
+    const cal = mesh(new RoundedBoxGeometry(0.085, 0.055, 0.04, 3, 0.012), MAT.gold);
+    cal.position.set(0.1, -0.08, 0.11);
+    cal.rotation.z = -0.7;
+    g.add(cal);
+  } else {
+    for (const s of [1, -1]) {
+      const disc = mesh(new THREE.CylinderGeometry(0.14, 0.14, 0.006, 48), MAT.steel, 0, 0, s * 0.083);
+      disc.rotation.x = Math.PI / 2;
+      g.add(disc);
+      const cal = mesh(new RoundedBoxGeometry(0.09, 0.06, 0.042, 3, 0.012), MAT.gold);
+      cal.position.set(0.09, -0.09, s * 0.09);
+      cal.rotation.z = -0.8;
+      g.add(cal);
+    }
+  }
+  return g;
+}
+
+const FA = [-0.72, 0.31, 0];  // axe roue avant
+const RA = [0.70, 0.31, 0];   // axe roue arrière
+
+const frontWheel = buildWheel(false);
+frontWheel.position.set(...FA);
+setLabel(frontWheel, 'Roue avant · jante or');
+frontG.add(frontWheel);
+
+const rearWheel = buildWheel(true);
+rearWheel.position.set(...RA);
+setLabel(rearWheel, 'Roue arrière · jante or');
+rearG.add(rearWheel);
+
+/* ============================================================
+   FOURCHE + DIRECTION (avant)
+============================================================ */
+{
+  const fork = new THREE.Group();
+  setLabel(fork, 'Fourche inversée · tubes or');
+  const T = new THREE.Vector3(-0.44, 0.92, 0);   // té supérieur
+  const A = new THREE.Vector3(...FA);            // axe de roue
+  const dir = T.clone().sub(A).normalize();
+
+  for (const s of [1, -1]) {
+    const lowTop = A.clone().addScaledVector(dir, 0.36);
+    fork.add(cylBetween([A.x, A.y, s * 0.098], [lowTop.x, lowTop.y, s * 0.098], 0.028, MAT.dark));
+    const upBot = A.clone().addScaledVector(dir, 0.30);
+    fork.add(cylBetween([upBot.x, upBot.y, s * 0.098], [T.x, T.y, s * 0.098], 0.0205, MAT.goldBright));
+  }
+  /* tés de fourche */
+  for (const f of [0.86, 0.99]) {
+    const p = A.clone().addScaledVector(dir, 0.653 * f);
+    const clamp = mesh(new RoundedBoxGeometry(0.075, 0.03, 0.25, 2, 0.01), MAT.dark, p.x, p.y, 0);
+    clamp.rotation.z = -0.44;
+    fork.add(clamp);
+  }
+  /* colonne de direction */
+  fork.add(cylBetween([T.x - 0.025, T.y - 0.06, 0], [T.x + 0.02, T.y + 0.04, 0], 0.032, MAT.aluDark));
+  /* axe de roue */
+  fork.add(cylBetween([A.x, A.y, -0.12], [A.x, A.y, 0.12], 0.016, MAT.steel));
+
+  /* demi-guidons + poignées + leviers */
+  for (const s of [1, -1]) {
+    fork.add(cylBetween([T.x, T.y + 0.015, s * 0.1], [T.x + 0.03, T.y - 0.005, s * 0.22], 0.012, MAT.dark));
+    fork.add(cylBetween([T.x + 0.02, T.y + 0.002, s * 0.185], [T.x + 0.033, T.y - 0.007, s * 0.245], 0.017, MAT.rubber));
+    fork.add(cylBetween([T.x + 0.01, T.y + 0.01, s * 0.19], [T.x - 0.07, T.y + 0.03, s * 0.23], 0.006, MAT.alu));
+  }
+
+  /* garde-boue avant */
+  const fender = mesh(new THREE.TorusGeometry(0.335, 0.026, 10, 40, 1.9), MAT.paint);
+  fender.position.set(FA[0], FA[1], 0);
+  fender.rotation.z = Math.PI / 2 - 0.95 - 0.12;
+  fender.scale.z = 2.9;
+  setLabel(fender, 'Garde-boue avant');
+  fork.add(fender);
+
+  frontG.add(fork);
+}
+
+/* ============================================================
+   TÊTE DE FOURCHE / CARÉNAGE AVANT (avant)
+============================================================ */
+{
+  const nose = extrudeShape([
+    [-0.28, 0.92], [-0.52, 0.90], [-0.70, 0.82], [-0.76, 0.74],
+    [-0.70, 0.68], [-0.50, 0.63], [-0.36, 0.62], [-0.28, 0.70]
+  ], 0.16, 0.065, MAT.paint);
+  setLabel(nose, 'Tête de fourche');
+  frontG.add(nose);
+
+  /* décal "675 TRIPLE" sur les flancs */
+  const t675 = textTexture((g, w, h) => {
+    g.fillStyle = '#d4af37';
+    g.font = '900 118px "Arial Black", Arial, sans-serif';
+    g.textAlign = 'center';
+    g.fillText('675', w / 2, 128);
+    g.font = '700 34px Arial, sans-serif';
+    g.letterSpacing = '14px';
+    g.fillText('TRIPLE', w / 2, 176);
+  });
+  decalPair(nose, t675, 0.17, 0.085, -0.50, 0.70, 0.152, -0.12);
+
+  /* optiques doubles */
+  for (const s of [1, -1]) {
+    const lamp = mesh(new THREE.SphereGeometry(0.048, 20, 14), MAT.headlight, -0.80, 0.745, s * 0.075);
+    lamp.scale.set(0.45, 0.85, 1);
+    lamp.castShadow = false;
+    frontG.add(lamp);
+  }
+
+  /* bulle */
+  const screen = mesh(
+    new THREE.CylinderGeometry(0.26, 0.315, 0.19, 28, 1, true, -Math.PI / 2 - 0.72, 1.44),
+    MAT.glass, -0.10, 0.77, 0
+  );
+  screen.rotation.z = -0.62;
+  screen.scale.z = 0.8;
+  screen.castShadow = false;
+  setLabel(screen, 'Bulle');
+  frontG.add(screen);
+
+  /* rétroviseurs */
+  for (const s of [1, -1]) {
+    frontG.add(cylBetween([-0.38, 0.93, s * 0.10], [-0.34, 0.985, s * 0.19], 0.008, MAT.plastic));
+    const mir = mesh(new RoundedBoxGeometry(0.09, 0.048, 0.018, 2, 0.008), MAT.paint, -0.335, 0.99, s * 0.205);
+    mir.rotation.y = s * 0.35;
+    setLabel(mir, 'Rétroviseur');
+    frontG.add(mir);
+  }
+}
+
+/* ============================================================
+   CHÂSSIS + RÉSERVOIR (monte à l'éclaté)
+============================================================ */
+{
+  const frame = new THREE.Group();
+  setLabel(frame, 'Cadre périmétrique aluminium');
+  for (const s of [1, -1]) {
+    const spar = mesh(new RoundedBoxGeometry(0.88, 0.085, 0.032, 2, 0.012), MAT.dark, 0.0, 0.67, s * 0.13);
+    spar.rotation.z = -0.375;
+    spar.rotation.y = s * 0.06;
+    frame.add(spar);
+    const pivot = mesh(new RoundedBoxGeometry(0.13, 0.22, 0.028, 2, 0.012), MAT.dark, 0.41, 0.50, s * 0.12);
+    frame.add(pivot);
+  }
+  const steer = cylBetween([-0.46, 0.80, 0], [-0.41, 0.945, 0], 0.042, MAT.dark);
+  frame.add(steer);
+  chassisG.add(frame);
+
+  const tank = mesh(new THREE.SphereGeometry(1, 48, 32), MAT.paint, 0.04, 0.775, 0);
+  tank.scale.set(0.33, 0.15, 0.185);
+  setLabel(tank, 'Réservoir');
+  chassisG.add(tank);
+
+  const cap = mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.012, 20), MAT.steel, -0.02, 0.922, 0);
+  chassisG.add(cap);
+
+  /* boîte à air sous le réservoir */
+  const airbox = mesh(new RoundedBoxGeometry(0.34, 0.11, 0.24, 2, 0.03), MAT.plastic, 0.05, 0.635, 0);
+  setLabel(airbox, 'Boîte à air');
+  chassisG.add(airbox);
+
+  const tTriumph = textTexture((g, w, h) => {
+    g.fillStyle = '#d4af37';
+    g.font = '700 64px Arial, sans-serif';
+    g.textAlign = 'center';
+    g.letterSpacing = '10px';
+    g.fillText('TRIUMPH', w / 2, h / 2 + 22);
+  });
+  decalPair(chassisG, tTriumph, 0.17, 0.045, 0.06, 0.78, 0.193, 0);
+
+  explodable(chassisG, [0.50, 0.10, 0], 0.05);
+}
+
+/* ============================================================
+   TRAIN ARRIÈRE (part vers l'arrière)
+============================================================ */
+{
+  /* bras oscillant */
+  const swing = new THREE.Group();
+  setLabel(swing, 'Bras oscillant');
+  for (const s of [1, -1]) {
+    const arm = mesh(new RoundedBoxGeometry(0.36, 0.075, 0.028, 2, 0.01), MAT.dark, 0.56, 0.40, s * 0.105);
+    arm.rotation.z = -0.55;
+    swing.add(arm);
+  }
+  const brace = mesh(new RoundedBoxGeometry(0.05, 0.09, 0.24, 2, 0.01), MAT.dark, 0.47, 0.455, 0);
+  brace.rotation.z = -0.55;
+  swing.add(brace);
+  swing.add(cylBetween([RA[0], RA[1], -0.13], [RA[0], RA[1], 0.13], 0.016, MAT.steel));
+  rearG.add(swing);
+
+  /* amortisseur + ressort or */
+  const shock = new THREE.Group();
+  setLabel(shock, 'Amortisseur arrière');
+  shock.add(cylBetween([0.50, 0.42, 0], [0.44, 0.66, 0], 0.019, MAT.steel));
+  const spring = springMesh(0.0085, 0.046, 6, 0.19, MAT.gold);
+  spring.position.set(0.485, 0.44, 0);
+  spring.rotation.z = 0.24;
+  shock.add(spring);
+  rearG.add(shock);
+
+  /* boucle arrière (sous-cadre) */
+  for (const s of [1, -1]) {
+    rearG.add(cylBetween([0.36, 0.70, s * 0.1], [0.86, 0.755, s * 0.06], 0.012, MAT.dark));
+    rearG.add(cylBetween([0.42, 0.55, s * 0.1], [0.78, 0.67, s * 0.07], 0.010, MAT.dark));
+  }
+
+  /* chaîne + pignon sortie boîte (reste avec l'arrière, comme sur l'éclaté photo) */
+  const chainPts = [
+    [0.30, 0.475], [0.50, 0.45], [0.70, 0.405], [0.795, 0.31],
+    [0.70, 0.215], [0.50, 0.28], [0.30, 0.365], [0.245, 0.42]
+  ].map(p => new THREE.Vector3(p[0], p[1], -0.15));
+  const chainCurve = new THREE.CatmullRomCurve3(chainPts, true);
+  const chain = mesh(new THREE.TubeGeometry(chainCurve, 140, 0.0125, 8, true), MAT.chain);
+  setLabel(chain, 'Chaîne de transmission');
+  rearG.add(chain);
+  const frontSprocket = mesh(new THREE.CylinderGeometry(0.05, 0.05, 0.012, 20), MAT.steel, 0.30, 0.42, -0.15);
+  frontSprocket.rotation.x = Math.PI / 2;
+  rearG.add(frontSprocket);
+
+  /* coque arrière */
+  const tail = extrudeShape([
+    [0.34, 0.775], [0.62, 0.80], [0.90, 0.845], [0.955, 0.795],
+    [0.84, 0.70], [0.52, 0.655], [0.40, 0.655]
+  ], 0.11, 0.042, MAT.paint);
+  setLabel(tail, 'Coque arrière');
+  rearG.add(tail);
+
+  /* selle */
+  const seat = mesh(new RoundedBoxGeometry(0.28, 0.045, 0.19, 2, 0.018), MAT.seat, 0.43, 0.795, 0);
+  seat.rotation.z = 0.06;
+  setLabel(seat, 'Selle');
+  rearG.add(seat);
+
+  /* échappement sous la selle : double sortie */
+  const muffler = mesh(new RoundedBoxGeometry(0.24, 0.08, 0.18, 2, 0.028), MAT.dark, 0.82, 0.685, 0);
+  setLabel(muffler, 'Silencieux sous la selle');
+  rearG.add(muffler);
+  for (const s of [1, -1]) {
+    const tip = cylBetween([0.88, 0.70, s * 0.052], [0.97, 0.712, s * 0.052], 0.030, MAT.steel);
+    setLabel(tip, 'Sorties d’échappement');
+    rearG.add(tip);
+    const inner = cylBetween([0.967, 0.7115, s * 0.052], [0.974, 0.7125, s * 0.052], 0.023, MAT.dark);
+    rearG.add(inner);
+  }
+
+  /* feu arrière + support de plaque */
+  rearG.add(mesh(new RoundedBoxGeometry(0.045, 0.025, 0.085, 2, 0.008), MAT.taillight, 0.945, 0.79, 0));
+  const plateArm = mesh(new RoundedBoxGeometry(0.14, 0.018, 0.036, 2, 0.006), MAT.plastic, 0.95, 0.62, 0);
+  plateArm.rotation.z = 1.0;
+  rearG.add(plateArm);
+  const plate = mesh(new RoundedBoxGeometry(0.013, 0.07, 0.105, 2, 0.004), MAT.plastic, 0.99, 0.545, 0);
+  plate.rotation.z = 0.22;
+  rearG.add(plate);
+
+  /* repose-pieds */
+  for (const s of [1, -1]) {
+    const bracket = mesh(new RoundedBoxGeometry(0.09, 0.11, 0.014, 2, 0.006), MAT.aluDark, 0.40, 0.46, s * 0.15);
+    rearG.add(bracket);
+    rearG.add(cylBetween([0.42, 0.42, s * 0.15], [0.42, 0.41, s * 0.21], 0.011, MAT.dark));
+  }
+}
+
+/* ============================================================
+   MOTEUR — trois-cylindres 675, chaque pièce éclatable
+============================================================ */
+{
+  /* --- bloc haut incliné : cylindres, culasse, couvre-culasse, arbres à cames, pistons --- */
+  const stack = new THREE.Group();
+  stack.position.set(0.0, 0.44, 0);
+  stack.rotation.z = 0.13;
+  engineG.add(stack);
+
+  const block = mesh(new RoundedBoxGeometry(0.36, 0.15, 0.29, 3, 0.02), MAT.engine, 0, 0.075, 0);
+  setLabel(block, 'Bloc-cylindres');
+  explodable(block, [0, 0.16, 0], 0.12);
+  stack.add(block);
+
+  const head = mesh(new RoundedBoxGeometry(0.38, 0.10, 0.30, 3, 0.02), MAT.engineDark, 0, 0.19, 0);
+  setLabel(head, 'Culasse');
+  explodable(head, [0, 0.38, 0], 0.08);
+  stack.add(head);
+
+  const cover = mesh(new RoundedBoxGeometry(0.34, 0.075, 0.26, 3, 0.03), MAT.plastic, 0, 0.265, 0);
+  setLabel(cover, 'Couvre-culasse');
+  explodable(cover, [0, 0.72, 0], 0.02);
+  stack.add(cover);
+  for (let i = -1; i <= 1; i++) {
+    const rib = mesh(new RoundedBoxGeometry(0.3, 0.012, 0.02, 1, 0.005), MAT.aluDark, 0, 0.30, i * 0.07);
+    explodable(rib, [0, 0.72, 0], 0.02);
+    stack.add(rib);
+  }
+
+  /* arbres à cames */
+  for (const [i, x] of [-0.07, 0.07].entries()) {
+    const cam = new THREE.Group();
+    cam.position.set(x, 0.19, 0);
+    const shaft = mesh(new THREE.CylinderGeometry(0.017, 0.017, 0.32, 12), MAT.steel);
+    shaft.rotation.x = Math.PI / 2;
+    cam.add(shaft);
+    for (let l = 0; l < 6; l++) {
+      const lobe = mesh(new THREE.CylinderGeometry(0.026, 0.026, 0.014, 12), MAT.steel, 0, 0, -0.13 + l * 0.052);
+      lobe.rotation.x = Math.PI / 2;
+      lobe.scale.x = 1.35;
+      lobe.rotation.z = l * 0.9;
+      cam.add(lobe);
+    }
+    const gear = mesh(new THREE.CylinderGeometry(0.042, 0.042, 0.012, 24), MAT.gold, 0, 0, 0.142);
+    gear.rotation.x = Math.PI / 2;
+    cam.add(gear);
+    setLabel(cam, 'Arbre à cames');
+    explodable(cam, [0.05 * (i ? 1 : -1), 0.58 + i * 0.06, 0], 0.3);
+    stack.add(cam);
+  }
+
+  /* pistons + bielles */
+  for (const [i, z] of [-0.088, 0, 0.088].entries()) {
+    const pg = new THREE.Group();
+    pg.position.set(0, 0.06, z);
+    const piston = mesh(new THREE.CylinderGeometry(0.039, 0.039, 0.05, 20), MAT.alu, 0, 0.02, 0);
+    pg.add(piston);
+    const ring = mesh(new THREE.TorusGeometry(0.039, 0.003, 8, 24), MAT.steel, 0, 0.04, 0);
+    ring.rotation.x = Math.PI / 2;
+    pg.add(ring);
+    const rodBody = mesh(new RoundedBoxGeometry(0.022, 0.095, 0.014, 1, 0.005), MAT.steel, 0, -0.055, 0);
+    pg.add(rodBody);
+    const bigEnd = mesh(new THREE.CylinderGeometry(0.023, 0.023, 0.018, 16), MAT.steel, 0, -0.105, 0);
+    bigEnd.rotation.x = Math.PI / 2;
+    pg.add(bigEnd);
+    setLabel(pg, 'Piston & bielle');
+    explodable(pg, [0.015 * (i - 1), 0.36 + i * 0.02, 0], 0.34);
+    stack.add(pg);
+  }
+
+  /* --- bas moteur (repère monde) --- */
+  const crankcase = mesh(new RoundedBoxGeometry(0.48, 0.21, 0.30, 3, 0.035), MAT.engine, 0.06, 0.375, 0);
+  setLabel(crankcase, 'Carter moteur');
+  explodable(crankcase, [0, -0.06, 0], 0.15);
+  engineG.add(crankcase);
+
+  const sump = mesh(new RoundedBoxGeometry(0.30, 0.085, 0.24, 2, 0.02), MAT.engineDark, 0.03, 0.245, 0);
+  setLabel(sump, 'Carter d’huile');
+  explodable(sump, [0.02, -0.15, 0], 0.18);
+  engineG.add(sump);
+
+  /* vilebrequin */
+  {
+    const crank = new THREE.Group();
+    crank.position.set(0.02, 0.40, 0);
+    const shaft = mesh(new THREE.CylinderGeometry(0.019, 0.019, 0.34, 12), MAT.steel);
+    shaft.rotation.x = Math.PI / 2;
+    crank.add(shaft);
+    for (let i = 0; i < 6; i++) {
+      const web = mesh(new THREE.CylinderGeometry(0.052, 0.052, 0.016, 20), MAT.steel, 0, 0, -0.125 + i * 0.05);
+      web.rotation.x = Math.PI / 2;
+      web.position.y = (i % 2 ? 0.008 : -0.008);
+      crank.add(web);
+    }
+    const endGear = mesh(new THREE.CylinderGeometry(0.036, 0.036, 0.014, 24), MAT.gold, 0, 0, 0.148);
+    endGear.rotation.x = Math.PI / 2;
+    crank.add(endGear);
+    setLabel(crank, 'Vilebrequin');
+    explodable(crank, [-0.08, -0.26, 0], 0.32);
+    engineG.add(crank);
+  }
+
+  /* arbres de boîte de vitesses */
+  for (const [i, p] of [[0.16, 0.375], [0.25, 0.335]].entries()) {
+    const shaft = new THREE.Group();
+    shaft.position.set(p[0], p[1], 0);
+    const s = mesh(new THREE.CylinderGeometry(0.014, 0.014, 0.30, 10), MAT.steel);
+    s.rotation.x = Math.PI / 2;
+    shaft.add(s);
+    for (let gI = 0; gI < 5; gI++) {
+      const gear = mesh(new THREE.CylinderGeometry(0.028 + (gI % 3) * 0.009, 0.028 + (gI % 3) * 0.009, 0.014, 20), MAT.steel, 0, 0, -0.1 + gI * 0.05);
+      gear.rotation.x = Math.PI / 2;
+      shaft.add(gear);
+    }
+    setLabel(shaft, 'Arbres de boîte de vitesses');
+    explodable(shaft, [0.10 + i * 0.08, -0.20 + i * 0.04, 0], 0.36);
+    engineG.add(shaft);
+  }
+
+  /* embrayage (droite) */
+  {
+    const cl = new THREE.Group();
+    cl.position.set(0.17, 0.40, 0.155);
+    const basket = mesh(new THREE.CylinderGeometry(0.072, 0.072, 0.055, 28), MAT.engineDark);
+    basket.rotation.x = Math.PI / 2;
+    cl.add(basket);
+    setLabel(cl, 'Noix d’embrayage');
+    explodable(cl, [0.05, -0.02, 0.24], 0.22);
+    engineG.add(cl);
+
+    const cov = new THREE.Group();
+    cov.position.set(0.17, 0.40, 0.185);
+    const c1 = mesh(new THREE.CylinderGeometry(0.082, 0.087, 0.028, 32), MAT.engineDark);
+    c1.rotation.x = Math.PI / 2;
+    cov.add(c1);
+    const c2 = mesh(new THREE.SphereGeometry(0.079, 28, 18), MAT.engineDark, 0, 0, 0.014);
+    c2.scale.set(1, 1, 0.32);
+    cov.add(c2);
+    setLabel(cov, 'Carter d’embrayage');
+    explodable(cov, [0.07, 0, 0.42], 0.1);
+    engineG.add(cov);
+  }
+
+  /* alternateur (gauche) */
+  {
+    const rotor = new THREE.Group();
+    rotor.position.set(0.0, 0.395, -0.15);
+    const r1 = mesh(new THREE.CylinderGeometry(0.06, 0.06, 0.04, 24), MAT.steel);
+    r1.rotation.x = Math.PI / 2;
+    rotor.add(r1);
+    setLabel(rotor, 'Rotor d’alternateur');
+    explodable(rotor, [0, -0.02, -0.26], 0.24);
+    engineG.add(rotor);
+
+    const cov = new THREE.Group();
+    cov.position.set(0.0, 0.395, -0.175);
+    const c1 = mesh(new THREE.CylinderGeometry(0.075, 0.08, 0.025, 28), MAT.engineDark);
+    c1.rotation.x = Math.PI / 2;
+    cov.add(c1);
+    const c2 = mesh(new THREE.SphereGeometry(0.073, 24, 16), MAT.engineDark, 0, 0, -0.014);
+    c2.scale.set(1, 1, 0.34);
+    cov.add(c2);
+    setLabel(cov, 'Carter d’alternateur');
+    explodable(cov, [0, 0, -0.44], 0.12);
+    engineG.add(cov);
+  }
+
+  /* démarreur */
+  {
+    const st = cylBetween([0.13, 0.50, -0.06], [0.22, 0.50, -0.06], 0.028, MAT.dark);
+    setLabel(st, 'Démarreur');
+    explodable(st, [0.10, 0.02, -0.18], 0.28);
+    engineG.add(st);
+  }
+
+  /* filtre à huile + pompe à eau */
+  {
+    const filter = cylBetween([-0.17, 0.32, 0.05], [-0.10, 0.32, 0.05], 0.033, MAT.dark);
+    setLabel(filter, 'Filtre à huile');
+    explodable(filter, [-0.16, -0.14, 0.12], 0.26);
+    engineG.add(filter);
+
+    const pump = new THREE.Group();
+    pump.position.set(-0.07, 0.335, -0.155);
+    const pc = mesh(new THREE.CylinderGeometry(0.038, 0.038, 0.03, 20), MAT.alu);
+    pc.rotation.x = Math.PI / 2;
+    pump.add(pc);
+    setLabel(pump, 'Pompe à eau');
+    explodable(pump, [-0.10, -0.18, -0.22], 0.3);
+    engineG.add(pump);
+  }
+
+  /* rampe d'injection : 3 corps de papillon */
+  {
+    const tb = new THREE.Group();
+    tb.position.set(0.13, 0.615, 0);
+    for (const z of [-0.088, 0, 0.088]) {
+      const body = mesh(new THREE.CylinderGeometry(0.024, 0.027, 0.085, 16), MAT.aluDark, 0, 0, z);
+      body.rotation.z = -0.15;
+      tb.add(body);
+      const horn = mesh(new THREE.CylinderGeometry(0.032, 0.024, 0.03, 16), MAT.engineDark, 0.008, 0.055, z);
+      horn.rotation.z = -0.15;
+      tb.add(horn);
+    }
+    const rail = mesh(new THREE.CylinderGeometry(0.009, 0.009, 0.22, 8), MAT.steel, 0.03, 0.03, 0);
+    rail.rotation.x = Math.PI / 2;
+    tb.add(rail);
+    setLabel(tb, 'Rampe d’injection');
+    explodable(tb, [-0.02, 0.46, 0], 0.2);
+    engineG.add(tb);
+  }
+
+  /* radiateur + ventilateur + durites */
+  {
+    const rad = new THREE.Group();
+    rad.position.set(-0.27, 0.50, 0);
+    const core = mesh(new RoundedBoxGeometry(0.045, 0.26, 0.36, 2, 0.012), MAT.radiator);
+    core.rotation.z = -0.12;
+    rad.add(core);
+    for (const s of [1, -1]) {
+      const tank = mesh(new RoundedBoxGeometry(0.05, 0.26, 0.025, 2, 0.01), MAT.dark, 0, 0, s * 0.185);
+      tank.rotation.z = -0.12;
+      rad.add(tank);
+    }
+    const fan = mesh(new THREE.CylinderGeometry(0.085, 0.085, 0.03, 24), MAT.plastic, 0.045, -0.03, -0.06);
+    fan.rotation.z = Math.PI / 2 - 0.12;
+    rad.add(fan);
+    setLabel(rad, 'Radiateur');
+    explodable(rad, [-0.34, 0.12, 0], 0.08);
+    engineG.add(rad);
+
+    /* durites */
+    const hosePts = [
+      new THREE.Vector3(-0.29, 0.40, 0.10), new THREE.Vector3(-0.22, 0.36, 0.12),
+      new THREE.Vector3(-0.13, 0.35, 0.10), new THREE.Vector3(-0.07, 0.37, 0.06)
+    ];
+    const hose = mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(hosePts), 24, 0.013, 8), MAT.rubber);
+    setLabel(hose, 'Durite de refroidissement');
+    explodable(hose, [-0.30, 0.02, 0.10], 0.26);
+    engineG.add(hose);
+  }
+
+  /* collecteur d'échappement 3-en-1 */
+  {
+    const ex = new THREE.Group();
+    setLabel(ex, 'Collecteur d’échappement 3-en-1');
+    for (const z of [-0.09, 0, 0.09]) {
+      const pts = [
+        new THREE.Vector3(-0.14, 0.50, z),
+        new THREE.Vector3(-0.24, 0.42, z * 0.85),
+        new THREE.Vector3(-0.27, 0.29, z * 0.5),
+        new THREE.Vector3(-0.18, 0.195, z * 0.3),
+        new THREE.Vector3(0.0, 0.165, z * 0.12),
+        new THREE.Vector3(0.10, 0.165, 0)
+      ];
+      ex.add(mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 48, 0.0195, 12), MAT.steel));
+    }
+    const collector = cylBetween([0.10, 0.165, 0], [0.24, 0.17, 0], 0.042, MAT.steel);
+    ex.add(collector);
+    const mid = [
+      new THREE.Vector3(0.24, 0.17, 0), new THREE.Vector3(0.42, 0.22, 0.02),
+      new THREE.Vector3(0.58, 0.38, 0.03), new THREE.Vector3(0.70, 0.58, 0.02),
+      new THREE.Vector3(0.76, 0.66, 0)
+    ];
+    ex.add(mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(mid), 40, 0.026, 10), MAT.steel));
+    explodable(ex, [-0.10, -0.10, 0], 0.16);
+    engineG.add(ex);
+  }
+
+  /* flancs de carénage / sabot : deux demi-coques qui s'écartent latéralement */
+  {
+    const bellyPts = [
+      [-0.40, 0.64], [-0.46, 0.44], [-0.30, 0.27], [0.12, 0.25],
+      [0.36, 0.31], [0.37, 0.44], [0.10, 0.355], [-0.15, 0.50]
+    ];
+    const tDaytona = textTexture((g, w, h) => {
+      g.fillStyle = '#d4af37';
+      g.font = 'italic 700 96px Georgia, "Times New Roman", serif';
+      g.textAlign = 'center';
+      g.fillText('Daytona', w / 2, h / 2 + 34);
+    });
+    for (const side of [1, -1]) {
+      const shape = new THREE.Shape(bellyPts.map(p => new THREE.Vector2(p[0], p[1])));
+      const geo = new THREE.ExtrudeGeometry(shape, {
+        depth: 0.12, bevelEnabled: true, bevelThickness: 0.03, bevelSize: 0.024,
+        bevelSegments: 4, steps: 1, curveSegments: 16
+      });
+      geo.translate(0, 0, side * 0.085 - 0.06);
+      const panel = mesh(geo, MAT.paint);
+      setLabel(panel, side > 0 ? 'Flanc de carénage droit' : 'Flanc de carénage gauche');
+      const decal = new THREE.Mesh(
+        new THREE.PlaneGeometry(0.26, 0.13),
+        new THREE.MeshBasicMaterial({ map: tDaytona, transparent: true, toneMapped: false, depthWrite: false })
+      );
+      decal.position.set(-0.16, 0.40, side * 0.18);
+      decal.rotation.y = side > 0 ? 0 : Math.PI;
+      decal.rotation.z = side > 0 ? 0.12 : -0.12;
+      decal.renderOrder = 2;
+      panel.add(decal);
+      explodable(panel, [-0.02, -0.22, side * 0.34], 0.0);
+      engineG.add(panel);
+    }
+  }
+
+  /* visserie, rondelles et ressorts qui flottent à l'éclaté */
+  {
+    for (let i = 0; i < 26; i++) {
+      const bolt = new THREE.Group();
+      const bx = 0.02 + (rand() - 0.5) * 0.30;
+      const by = 0.36 + (rand() - 0.5) * 0.12;
+      const bz = (rand() - 0.5) * 0.18;
+      bolt.position.set(bx, Math.min(by, 0.44), bz);
+      const headM = mesh(new THREE.CylinderGeometry(0.0095, 0.0095, 0.008, 6), MAT.alu);
+      const shaftM = mesh(new THREE.CylinderGeometry(0.005, 0.005, 0.032, 8), MAT.steel, 0, -0.02, 0);
+      bolt.add(headM, shaftM);
+      bolt.rotation.set(rand() * Math.PI, rand() * Math.PI, rand() * Math.PI);
+      setLabel(bolt, 'Visserie moteur');
+      const dir = new THREE.Vector3(rand() - 0.5, rand() * 0.9 + 0.05, (rand() - 0.5) * 1.4).normalize();
+      explodable(bolt, dir.multiplyScalar(0.28 + rand() * 0.45).toArray(), 0.12 + rand() * 0.25);
+      engineG.add(bolt);
+    }
+    for (let i = 0; i < 6; i++) {
+      const washer = mesh(new THREE.TorusGeometry(0.009, 0.0028, 8, 16), MAT.steel,
+        0.02 + (rand() - 0.5) * 0.25, 0.36 + (rand() - 0.5) * 0.1, (rand() - 0.5) * 0.15);
+      washer.rotation.set(rand() * Math.PI, rand() * Math.PI, 0);
+      setLabel(washer, 'Rondelle');
+      const dir = new THREE.Vector3(rand() - 0.5, rand() * 0.8 + 0.1, (rand() - 0.5) * 1.5).normalize();
+      explodable(washer, dir.multiplyScalar(0.3 + rand() * 0.4).toArray(), 0.15 + rand() * 0.25);
+      engineG.add(washer);
+    }
+    for (let i = 0; i < 4; i++) {
+      const spr = springMesh(0.0022, 0.008, 5, 0.03, MAT.steel);
+      spr.position.set(0.02 + (rand() - 0.5) * 0.25, 0.37 + (rand() - 0.5) * 0.1, (rand() - 0.5) * 0.14);
+      spr.rotation.set(rand() * Math.PI, 0, rand() * Math.PI);
+      setLabel(spr, 'Ressort de soupape');
+      const dir = new THREE.Vector3(rand() - 0.5, rand() * 0.9 + 0.1, (rand() - 0.5) * 1.3).normalize();
+      explodable(spr, dir.multiplyScalar(0.3 + rand() * 0.4).toArray(), 0.2 + rand() * 0.2);
+      engineG.add(spr);
+    }
+  }
+}
+
+/* Demi-trains avant / arrière : écartés à l'éclaté (comme la photo) */
+explodable(frontG, [-0.55, 0, 0], 0, null);
+explodable(rearG, [0.55, 0, 0], 0, null);
+
+/* ============================================================
+   MOTEUR VITRINE — bloc trois-cylindres 660 haute-fidélité,
+   construit par le module partagé js/moteur660.js (identique à
+   la page moteur.html). Substitué au volume scanné dès que
+   l'éclaté commence ou que le zoom « mécanique à nu » est actif ;
+   s'éclate lui-même en ~44 pièces nommées.
+============================================================ */
+const { group: engineShowcase, parts: enginePieces } = buildMoteur660();
+engineShowcase.visible = false;
+/* orientation dans le repère moto : vilebrequin transverse (axe Z),
+   cylindres penchés vers l'avant (-X) ; échelle et position ajustées
+   pour recouvrir le bloc moteur scanné. */
+// aligné sur le centre du bloc scanné (transition sans « pop » à l'éclaté).
+// tilt = cant avant du bloc autour du vilebrequin : les 12° d'inclinaison
+// des fûts + ce tilt amènent les cylindres parallèles au radiateur (~24°).
+const ENG = { scale: 0.64, x: 0.016, y: 0.358, z: 0.031, rotY: Math.PI / 2, tilt: 12 * Math.PI / 180, factor: 0.5 };
+// orientation : lacet 90° (vilebrequin transverse) PUIS cant avant autour de
+// l'axe vilebrequin (monde Z) — composé par quaternions pour l'ordre correct.
+const _qYaw  = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), ENG.rotY);
+const _qTilt = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 0, 1), ENG.tilt);
+engineShowcase.quaternion.copy(_qTilt).multiply(_qYaw);
+engineShowcase.scale.setScalar(ENG.scale);
+engineShowcase.position.set(ENG.x, ENG.y, ENG.z);
+engineShowcase.traverse(o => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
+root.add(engineShowcase);
+
+/* chaque pièce s'éclate le long de son vecteur, exprimé dans le
+   repère local du moteur (donc pivoté/mis à l'échelle avec le bloc) */
+for (const p of enginePieces) {
+  p.g.userData.base = p.g.position.clone();
+  p.g.userData.off = new THREE.Vector3(p.dir[0], p.dir[1], p.dir[2])
+    .normalize().multiplyScalar(p.dist * ENG.factor);
+  p.g.userData.stagger = p.stag;
+  p.g.userData.label = p.name;
+  exploders.push(p.g);
+}
+
+/* le bloc entier suit la trajectoire du moteur scanné */
+engineShowcase.userData.base = engineShowcase.position.clone();
+engineShowcase.userData.off = new THREE.Vector3(-0.22, -0.05, 0);
+engineShowcase.userData.stagger = 0.22;
+engineShowcase.userData.label = 'Bloc moteur & boîte';
+exploders.push(engineShowcase);
+
+/* ============================================================
+   PÉRIPHÉRIQUES (étape 1) — corps d'injection, ECU,
+   régulateur/relais, faisceau électrique + connecteurs, et
+   visserie éparse. Cotes réelles (1 unité ≈ 1,27 m) ;
+   emplacements dérivés des ancrages MESURÉS sur le scan
+   (moteur, cadre, réservoir, radiateur, boucle arrière).
+   Réf. visuelle : image « déconstruite » Triumph.
+============================================================ */
+{
+  const MM = v => v / 1270;                       // millimètres → unités scène
+  const periphG = new THREE.Group();
+  root.add(periphG);
+  const CENTER = new THREE.Vector3(0, 0.52, 0);   // centre approximatif de la moto
+  /* enregistre une pièce déjà positionnée ; offset radial par défaut (étape 1) */
+  function regP(o, label, stagger = 0.2, mult = 0.9, extra = [0, 0, 0]) {
+    setLabel(o, label);
+    const off = o.position.clone().sub(CENTER).multiplyScalar(mult).add(new THREE.Vector3(...extra));
+    explodable(o, [off.x, off.y, off.z], stagger, label);
+    periphG.add(o);
+  }
+  const mHarness = new THREE.MeshStandardMaterial({ color: 0x0a0a0c, metalness: 0.12, roughness: 0.82 });
+  const mConnGrn = new THREE.MeshStandardMaterial({ color: 0x2f6b3a, metalness: 0.1, roughness: 0.55 });
+  const mConnWht = new THREE.MeshStandardMaterial({ color: 0xccd0c8, metalness: 0.1, roughness: 0.55 });
+  const mZinc    = new THREE.MeshStandardMaterial({ color: 0xb7bcc2, metalness: 1.0, roughness: 0.28 });
+
+  /* boulon paramétrique (tête hex + rondelle + fût) et écrou */
+  function boltMesh(headR, len) {
+    const g = new THREE.Group();
+    g.add(mesh(new THREE.CylinderGeometry(headR, headR, headR * 0.85, 6), mZinc));
+    g.add(mesh(new THREE.CylinderGeometry(headR * 1.3, headR * 1.3, headR * 0.22, 18), mZinc, 0, -headR * 0.5, 0));
+    g.add(mesh(new THREE.CylinderGeometry(headR * 0.5, headR * 0.5, len, 12), MAT.steel, 0, -len * 0.5 - headR * 0.45, 0));
+    return g;
+  }
+  function nutMesh(r) {
+    const g = new THREE.Group();
+    g.add(mesh(new THREE.CylinderGeometry(r, r, r * 0.8, 6), mZinc));
+    g.add(mesh(new THREE.CylinderGeometry(r * 0.55, r * 0.55, r * 0.85, 12), MAT.dark));
+    return g;
+  }
+
+  /* 1 · corps d'injection ×3 + rampe + injecteurs (au-dessus du moteur) */
+  {
+    const g = new THREE.Group();
+    const bodyR = MM(27), bodyH = MM(58);
+    for (const z of [-0.075, 0, 0.075]) {
+      const body = mesh(new THREE.CylinderGeometry(bodyR, bodyR * 0.9, bodyH, 28), MAT.aluDark, 0, 0, z);
+      body.rotation.x = 0.28; g.add(body);
+      const bell = mesh(new THREE.CylinderGeometry(bodyR * 1.15, bodyR, MM(14), 28), MAT.dark, 0, bodyH * 0.5, z);
+      bell.rotation.x = 0.28; g.add(bell);
+      const inj = mesh(new THREE.CylinderGeometry(MM(6), MM(6), MM(50), 14), MAT.plastic, 0, -bodyH * 0.35, z);
+      inj.rotation.x = -0.5; g.add(inj);
+    }
+    const rail = mesh(new THREE.CylinderGeometry(MM(7), MM(7), 0.22, 14), MAT.alu, 0, -bodyH * 0.25, 0);
+    rail.rotation.x = Math.PI / 2; g.add(rail);
+    g.position.set(-0.02, 0.60, 0);
+    regP(g, "Corps d'injection & rampe", 0.14, 1.0, [0, 0.16, 0]);
+  }
+
+  /* 2 · calculateur moteur (ECU) sous le réservoir */
+  {
+    const g = new THREE.Group();
+    g.add(mesh(new RoundedBoxGeometry(MM(120), MM(30), MM(80), 3, MM(4)), MAT.dark));
+    g.add(mesh(new RoundedBoxGeometry(MM(22), MM(24), MM(60), 2, MM(2)), mConnGrn, MM(66), 0, 0));
+    g.position.set(-0.17, 0.60, 0.05);
+    regP(g, "Calculateur moteur (ECU)", 0.12, 1.0, [-0.05, 0.10, 0.12]);
+  }
+
+  /* 3 · régulateur/redresseur ailetté + bloc relais/fusibles */
+  {
+    const g = new THREE.Group();
+    g.add(mesh(new RoundedBoxGeometry(MM(70), MM(24), MM(52), 2, MM(3)), MAT.aluDark));
+    for (let i = 0; i < 5; i++) g.add(mesh(new THREE.BoxGeometry(MM(66), MM(20), MM(3)), MAT.alu, 0, MM(14), -MM(22) + i * MM(11)));
+    g.position.set(-0.42, 0.44, 0.10);
+    regP(g, "Régulateur/redresseur", 0.16, 1.0, [-0.10, -0.05, 0.10]);
+  }
+  {
+    const g = new THREE.Group();
+    for (let i = 0; i < 3; i++) g.add(mesh(new RoundedBoxGeometry(MM(28), MM(28), MM(24), 2, MM(2)), i === 1 ? mConnWht : MAT.dark, 0, 0, (i - 1) * MM(30)));
+    g.position.set(-0.10, 0.615, -0.10);
+    regP(g, "Relais & fusibles", 0.13, 1.0, [0, 0.12, -0.12]);
+  }
+
+  /* 4 · faisceau électrique (tronc + branches) + connecteurs colorés */
+  {
+    const g = new THREE.Group();
+    const tube = (pts, r) => {
+      const c = new THREE.CatmullRomCurve3(pts.map(p => new THREE.Vector3(...p)));
+      return mesh(new THREE.TubeGeometry(c, 48, r, 10), mHarness);
+    };
+    g.add(tube([[-0.56, 0.72, 0.03], [-0.42, 0.66, 0.04], [-0.2, 0.62, 0.03], [0.02, 0.60, 0.0], [0.22, 0.61, -0.02], [0.4, 0.63, -0.03]], MM(11)));
+    g.add(tube([[-0.42, 0.66, 0.04], [-0.46, 0.58, 0.06], [-0.44, 0.5, 0.09]], MM(7)));
+    g.add(tube([[0.02, 0.60, 0.0], [0.0, 0.57, 0.0], [-0.02, 0.55, 0.0]], MM(7)));
+    g.add(tube([[-0.56, 0.72, 0.03], [-0.62, 0.66, 0.02], [-0.6, 0.58, 0.0]], MM(7)));
+    g.add(tube([[0.4, 0.63, -0.03], [0.5, 0.62, -0.03], [0.6, 0.62, -0.02]], MM(6)));
+    const conn = (p, mat) => g.add(mesh(new RoundedBoxGeometry(MM(24), MM(16), MM(14), 2, MM(2)), mat, ...p));
+    conn([-0.44, 0.5, 0.09], mConnGrn); conn([-0.02, 0.55, 0.0], mConnWht);
+    conn([-0.6, 0.58, 0.0], mConnGrn); conn([0.6, 0.62, -0.02], mConnWht);
+    conn([0.22, 0.61, -0.02], MAT.dark);
+    g.position.set(0, 0, 0);
+    regP(g, "Faisceau électrique & connecteurs", 0.10, 0, [0, 0.24, 0.12]);
+  }
+
+  /* 5 · visserie éparse aux points de fixation (grappes autour des ancrages) */
+  {
+    const clusters = [
+      [-0.28, 0.55, 0.14, 4, 'm8'], [-0.28, 0.42, 0.14, 3, 'm8'],
+      [0.14, 0.44, 0.14, 4, 'm8'],  [0.02, 0.62, 0.12, 3, 'm6'],
+      [-0.40, 0.66, 0.14, 3, 'm6'], [-0.42, 0.38, 0.14, 3, 'm6'],
+      [0.30, 0.50, 0.16, 5, 'm8'],  [0.36, 0.40, 0.14, 3, 'm6'],
+      [-0.72, 0.34, 0.12, 6, 'm6'], [-0.15, 0.60, 0.10, 5, 'm5'],
+      [0.10, 0.58, 0.10, 4, 'm5'],  [-0.50, 0.50, 0.10, 3, 'm6'],
+      [0.50, 0.55, 0.12, 3, 'm6'],
+    ];
+    let idx = 0;
+    for (const [cx, cy, cz, n, sz] of clusters) {
+      for (let i = 0; i < n; i++) {
+        const jx = Math.sin(idx * 12.9) * 0.045, jy = Math.sin(idx * 7.7) * 0.045, jz = Math.sin(idx * 4.3) * 0.03;
+        const headR = sz === 'm8' ? MM(6.5) : sz === 'm6' ? MM(5) : MM(4);
+        const len = sz === 'm8' ? MM(24) : sz === 'm6' ? MM(18) : MM(14);
+        const mkr = (zside) => {
+          const b = (idx % 5 === 0) ? nutMesh(headR) : boltMesh(headR, len);
+          b.rotation.set(idx * 1.1, idx * 0.7, idx * 0.5);
+          b.position.set(cx + jx, cy + jy, zside * (cz + Math.abs(jz)));
+          regP(b, 'Visserie', 0.05 + (idx % 6) * 0.03, 1.18, [Math.sin(idx * 3) * 0.06 * -Math.sign(cx || 1), 0.02, zside * 0.05]);
+          idx++;
+        };
+        mkr(1);
+        if (i % 2 === 0) mkr(-1);
+      }
+    }
+  }
+}
+
+/* ============================================================
+   PIÈCES VITRINES supplémentaires — dessinées proprement
+   d'après les microfiches du catalogue ; elles remplacent les
+   blocs scannés correspondants dès que l'éclaté commence.
+============================================================ */
+const SWAPS = [];   /* { re, group, scanMeshes[] } */
+SWAPS.push({ re: /^Bloc moteur/i, group: engineShowcase, scanMeshes: [] });
+
+function registerShowcase(re, group, off, stagger, label) {
+  group.visible = false;
+  group.userData.base = group.position.clone();
+  group.userData.off = new THREE.Vector3(...off);
+  group.userData.stagger = stagger;
+  group.userData.label = label;
+  exploders.push(group);
+  root.add(group);
+  SWAPS.push({ re, group, scanMeshes: [] });
+}
+
+/* --- RADIATEUR : parallélépipède à ailettes, vases, ventilateur --------- */
+{
+  const R = new THREE.Group();
+  R.position.set(-0.37, 0.50, 0);
+  R.rotation.z = -0.10;
+  const mRad = new THREE.MeshStandardMaterial({ color: 0x232529, metalness: 0.75, roughness: 0.62, envMapIntensity: 0.5 });
+  const mRadDark = new THREE.MeshStandardMaterial({ color: 0x17181b, metalness: 0.6, roughness: 0.72, envMapIntensity: 0.4 });
+  /* faisceau */
+  R.add(mesh(new THREE.BoxGeometry(0.038, 0.30, 0.34), mRadDark));
+  for (let i = 0; i < 26; i++) {                                   // ailettes verticales
+    R.add(mesh(new THREE.BoxGeometry(0.034, 0.292, 0.0035), mRad, -0.021, 0, -0.157 + i * 0.01256));
+  }
+  /* vases supérieur / inférieur */
+  R.add(mesh(new RoundedBoxGeometry(0.052, 0.036, 0.35, 3, 0.014), mRad, 0, 0.166, 0));
+  R.add(mesh(new RoundedBoxGeometry(0.052, 0.036, 0.35, 3, 0.014), mRad, 0, -0.166, 0));
+  /* bouchon de remplissage */
+  const cap = mesh(new THREE.CylinderGeometry(0.013, 0.013, 0.012, 20), MAT.steel, 0.0, 0.19, 0.10);
+  R.add(cap);
+  /* ventilateur côté moteur : carénage + 5 pales + moyeu */
+  const shroud = mesh(new THREE.TorusGeometry(0.075, 0.007, 12, 48), mRadDark, 0.032, -0.02, -0.05);
+  shroud.rotation.y = Math.PI / 2;
+  R.add(shroud);
+  for (let i = 0; i < 5; i++) {
+    const blade = mesh(new THREE.BoxGeometry(0.006, 0.026, 0.062), mRad, 0.032, -0.02, -0.05);
+    blade.rotation.x = (i / 5) * Math.PI * 2;
+    blade.translateZ(0.04);
+    blade.rotateZ(0.5);
+    R.add(blade);
+  }
+  const hub = mesh(new THREE.CylinderGeometry(0.016, 0.016, 0.024, 20), mRad, 0.036, -0.02, -0.05);
+  hub.rotation.z = Math.PI / 2;
+  R.add(hub);
+  /* durites d'entrée / sortie */
+  const h1 = new THREE.CatmullRomCurve3([
+    new THREE.Vector3(0.01, 0.185, -0.14), new THREE.Vector3(0.05, 0.21, -0.12), new THREE.Vector3(0.09, 0.20, -0.08),
+  ]);
+  R.add(mesh(new THREE.TubeGeometry(h1, 24, 0.012, 14), MAT.rubber));
+  const h2 = new THREE.CatmullRomCurve3([
+    new THREE.Vector3(0.01, -0.185, 0.12), new THREE.Vector3(0.06, -0.21, 0.10), new THREE.Vector3(0.10, -0.19, 0.05),
+  ]);
+  R.add(mesh(new THREE.TubeGeometry(h2, 24, 0.012, 14), MAT.rubber));
+  /* pattes de fixation */
+  for (const s of [1, -1]) {
+    R.add(mesh(new THREE.BoxGeometry(0.02, 0.05, 0.012), mRad, 0.02, 0.10 * s, s * 0.178));
+  }
+  // Swap désactivé : la version vitrine simplifiée était mal placée. On garde
+  // le radiateur scanné (détaillé), qui s'éclate déjà via REAL_OFFSETS.
+  // registerShowcase(/^Radiateur/i, R, [-0.46, 0.12, 0], 0.14, 'Radiateur');
+}
+
+/* --- FOURCHE : tubes or, fourreaux, tés, bouchons ------------------------ */
+{
+  const F = new THREE.Group();
+  F.position.set(-0.683, 0.308, 0);
+  F.rotation.z = -0.43;
+  const mLower = new THREE.MeshStandardMaterial({ color: 0x1d1e22, metalness: 0.8, roughness: 0.45, envMapIntensity: 0.6 });
+  const mClamp = new THREE.MeshStandardMaterial({ color: 0x3a3d42, metalness: 0.85, roughness: 0.5, envMapIntensity: 0.6 });
+  for (const s of [1, -1]) {
+    /* fourreau (bas) avec pied d'axe et pattes d'étrier */
+    const lower = mesh(new THREE.CylinderGeometry(0.029, 0.031, 0.35, 36), mLower, 0, 0.195, s * 0.102);
+    F.add(lower);
+    F.add(mesh(new THREE.SphereGeometry(0.034, 24, 16), mLower, 0, 0.012, s * 0.102));
+    F.add(mesh(new RoundedBoxGeometry(0.03, 0.07, 0.02, 2, 0.008), mLower, 0.032, 0.09, s * 0.102));
+    /* joint cache-poussière */
+    const seal = mesh(new THREE.TorusGeometry(0.0245, 0.005, 10, 32), MAT.rubber, 0, 0.372, s * 0.102);
+    seal.rotation.x = Math.PI / 2;
+    F.add(seal);
+    /* tube (haut) doré + bouchon de précharge */
+    F.add(mesh(new THREE.CylinderGeometry(0.0215, 0.0215, 0.34, 36), MAT.goldBright, 0, 0.535, s * 0.102));
+    F.add(mesh(new THREE.CylinderGeometry(0.024, 0.024, 0.016, 24), MAT.gold, 0, 0.705, s * 0.102));
+  }
+  /* tés inférieur / supérieur + colonne */
+  for (const [ty, th] of [[0.575, 0.026], [0.675, 0.022]]) {
+    F.add(mesh(new RoundedBoxGeometry(0.075, th, 0.255, 2, 0.01), mClamp, 0.0, ty, 0));
+  }
+  F.add(mesh(new THREE.CylinderGeometry(0.028, 0.028, 0.12, 24), mClamp, 0, 0.625, 0));
+  /* axe de roue */
+  const axle = mesh(new THREE.CylinderGeometry(0.015, 0.015, 0.24, 20), MAT.steel, 0, 0.005, 0);
+  axle.rotation.x = Math.PI / 2;
+  F.add(axle);
+  // Swap désactivé : la fourche vitrine paraissait trop simplifiée. On garde
+  // la fourche scannée (tubes or détaillés), qui s'éclate déjà via REAL_OFFSETS.
+  // registerShowcase(/^Fourche/i, F, [-0.60, 0.32, 0], 0.12, 'Fourche');
+}
+
+/* --- GUIDON : demi-guidons, poignées, leviers, maître-cylindre ----------- */
+{
+  const H = new THREE.Group();
+  const mBar = new THREE.MeshStandardMaterial({ color: 0x2b2d31, metalness: 0.9, roughness: 0.4, envMapIntensity: 0.6 });
+  const mLever = new THREE.MeshStandardMaterial({ color: 0x4a4d53, metalness: 0.95, roughness: 0.35, envMapIntensity: 0.7 });
+  for (const s of [1, -1]) {
+    /* bride autour du tube de fourche */
+    const riser = mesh(new THREE.CylinderGeometry(0.028, 0.028, 0.034, 24), mBar, -0.41, 0.90, s * 0.102);
+    H.add(riser);
+    /* demi-guidon incliné vers l'arrière/bas */
+    H.add(cylBetween([-0.41, 0.898, s * 0.118], [-0.375, 0.878, s * 0.255], 0.0115, mBar));
+    /* poignée caoutchouc + embout */
+    H.add(cylBetween([-0.385, 0.884, s * 0.215], [-0.372, 0.876, s * 0.262], 0.0165, MAT.rubber));
+    H.add(cylBetween([-0.371, 0.8755, s * 0.263], [-0.3675, 0.8735, s * 0.277], 0.014, mLever));
+    /* levier (frein à droite, embrayage à gauche) */
+    H.add(cylBetween([-0.402, 0.902, s * 0.185], [-0.472, 0.916, s * 0.225], 0.0055, mLever));
+    H.add(cylBetween([-0.472, 0.916, s * 0.225], [-0.492, 0.918, s * 0.232], 0.0075, mLever));
+  }
+  /* maître-cylindre + bocal (côté droit) */
+  H.add(mesh(new RoundedBoxGeometry(0.03, 0.024, 0.035, 2, 0.008), mLever, -0.405, 0.923, 0.185));
+  H.add(mesh(new THREE.CylinderGeometry(0.014, 0.014, 0.02, 18), mLever, -0.398, 0.945, 0.19));
+  /* cocotte d'embrayage (gauche) */
+  H.add(mesh(new RoundedBoxGeometry(0.028, 0.02, 0.03, 2, 0.008), mBar, -0.405, 0.918, -0.185));
+  registerShowcase(/^Guidon/i, H, [-0.18, 0.85, 0], 0.20, 'Guidon');
+}
+
+
+/* ============================================================
+   MODÈLE PHOTORÉALISTE (optionnel) : models/daytona.glb
+   S'il est présent, il remplace automatiquement la maquette
+   procédurale — pièces éclatables et info-bulles générées.
+============================================================ */
+const modelHint = document.getElementById('modelHint');
+
+const FR_PARTS = [
+  [/wheel|tyre|tire|rim/i, 'Roue'], [/engine|motor|cylind|crank/i, 'Moteur'],
+  [/tank|fuel/i, 'Réservoir'], [/seat|saddle/i, 'Selle'],
+  [/fork/i, 'Fourche'], [/exhaust|muffler|pipe/i, 'Échappement'],
+  [/frame|chassis/i, 'Cadre'], [/brake|disc|caliper/i, 'Frein'],
+  [/chain|sprocket/i, 'Transmission'], [/swing/i, 'Bras oscillant'],
+  [/fairing|cowl|body|panel/i, 'Carénage'], [/mirror/i, 'Rétroviseur'],
+  [/light|lamp|head/i, 'Optique'], [/fender|mudguard/i, 'Garde-boue'],
+  [/shock|suspension|spring/i, 'Suspension'], [/handle|bar|grip/i, 'Guidon'],
+  [/radiator/i, 'Radiateur'], [/screen|windshield/i, 'Bulle'],
+];
+function frenchPartName(raw) {
+  for (const [re, fr] of FR_PARTS) if (re.test(raw)) return fr;
+  const clean = raw.replace(/[_.\-]+/g, ' ').replace(/\d+\s*$/g, '').trim();
+  return clean || 'Pièce';
+}
+
+/* état du modèle réel : la maquette procédurale reste en mémoire et sert
+   d'éclaté détaillé ; le modèle réel s'estompe quand l'éclaté commence */
+let realG = null;
+const realMats = [];
+/* carénages qui s'effacent quand on zoome (mode « mécanique à nu ») */
+const fadeMeshes = [];
+
+/* éclaté par BLOCS MÉCANIQUES du modèle réel : chaque bloc entier s'écarte
+   et dévoile le bloc moteur au centre — [regex, offset, décalage temporel] */
+const REAL_OFFSETS = [
+  [/^Flanc de carénage droit/i, [-0.05, -0.06, 0.55], 0.0],
+  [/^Flanc de carénage gauche/i, [-0.05, -0.06, -0.55], 0.0],
+  [/^Disque de frein avant droit/i, [-0.95, 0.02, 0.42], 0.10],
+  [/^Disque de frein avant gauche/i, [-0.95, 0.02, -0.42], 0.10],
+  [/^Disque de frein arrière/i, [1.0, 0.02, 0.42], 0.10],
+  [/^Roue avant/i, [-0.95, 0, 0], 0.06],
+  [/^Roue arrière/i, [1.0, 0, 0], 0.06],
+  [/^Fourche/i, [-0.60, 0.32, 0], 0.12],
+  [/^Radiateur/i, [-0.46, 0.12, 0], 0.14],
+  [/^Guidon/i, [-0.18, 0.85, 0], 0.20],
+  [/^Carénage avant/i, [-0.46, 0.58, 0], 0.15],
+  [/^Réservoir/i, [0.10, 0.62, 0], 0.18],
+  [/^Selle/i, [0.62, 0.42, 0], 0.18],
+  [/^Bras oscillant/i, [0.60, 0.0, 0], 0.12],
+  [/^Bloc moteur/i, [-0.20, -0.07, 0], 0.24],
+  [/^Cadre/i, [0.05, 0.06, 0], 0.3],
+];
+
+function setupRealModel(model) {
+  model.updateMatrixWorld(true);
+  let box = new THREE.Box3().setFromObject(model);
+  let size = box.getSize(new THREE.Vector3());
+  if (size.z > size.x) {                       // moto modélisée le long de Z → alignement sur X
+    model.rotation.y = Math.PI / 2;
+    model.updateMatrixWorld(true);
+    box = new THREE.Box3().setFromObject(model);
+    size = box.getSize(new THREE.Vector3());
+  }
+  const scale = 2.05 / Math.max(size.x, size.y, size.z);
+  model.scale.multiplyScalar(scale);
+  model.updateMatrixWorld(true);
+  box = new THREE.Box3().setFromObject(model);
+  const center = box.getCenter(new THREE.Vector3());
+  model.position.x -= center.x;
+  model.position.z -= center.z;
+  model.position.y -= box.min.y;               // roues posées sur le sol
+  model.updateMatrixWorld(true);
+
+  /* matériaux : ombres, reflets, clearcoat sur la peinture noire,
+     et collecte pour le fondu réel ↔ éclaté */
+  model.traverse(o => {
+    if (!o.isMesh) return;
+    o.castShadow = true;
+    o.receiveShadow = true;
+    const mats = Array.isArray(o.material) ? o.material : [o.material];
+    mats.forEach((m, i) => {
+      if (!m) return;
+      if (/noir|paint|body/i.test(m.name || '')) {
+        /* peinture noire : diélectrique + clearcoat (pas un miroir métallique) */
+        const paint = new THREE.MeshPhysicalMaterial({
+          color: 0x0b0b0d, metalness: 0.12, roughness: 0.42,
+          clearcoat: 1, clearcoatRoughness: 0.08, name: m.name,
+          envMapIntensity: 0.3,
+        });
+        if (Array.isArray(o.material)) o.material[i] = paint; else o.material = paint;
+        m.dispose();
+        m = paint;
+      } else if (/gomme|rubber|tire|tyre/i.test(m.name || '')) {
+        m.color.setHex(0x0a0a0b);
+        m.roughness = 0.96;
+        m.envMapIntensity = 0.35;
+      } else if ((m.name || '') === 'or') {
+        m.color.setHex(0xb8912f);
+        m.roughness = 0.33;
+      } else if ((m.name || '') === 'alu') {
+        m.color.setHex(0x6d7076);
+        m.roughness = 0.52;
+        m.envMapIntensity = 0.55;
+      } else if ((m.name || '') === 'acier') {
+        m.color.setHex(0x82878e);
+        m.roughness = 0.42;
+        m.envMapIntensity = 0.6;
+      }
+      if ('envMapIntensity' in m && !/gomme|rubber|tire|tyre|noir|paint|body|alu|acier/i.test(m.name || '')) m.envMapIntensity = 1.0;
+      m.side = THREE.DoubleSide;      // les tranches de découpe restent pleines
+      if (m.map) m.map.anisotropy = 8;
+      if (!realMats.includes(m)) realMats.push(m);
+    });
+  });
+
+  /* écartement des pièces : offsets nommés (modèle converti) sinon
+     éclaté radial générique pour tout autre GLB multi-pièces */
+  box = new THREE.Box3().setFromObject(model);
+  const c = box.getCenter(new THREE.Vector3());
+  const rnd = mulberry32(675675);
+  const q = new THREE.Quaternion(), s = new THREE.Vector3();
+  const mb = new THREE.Box3(), mc = new THREE.Vector3();
+  /* GLTFLoader remplace les espaces par des underscores dans les noms */
+  const cleanName = o => (o.name || '').replace(/_/g, ' ').trim();
+  let namedCount = 0;
+  model.traverse(o => { if (o.isMesh && REAL_OFFSETS.some(([re]) => re.test(cleanName(o)))) namedCount++; });
+  model.traverse(m => {
+    if (!m.isMesh) return;
+    mb.setFromObject(m);
+    if (mb.isEmpty()) return;
+    mb.getCenter(mc);
+    const mcY = mc.y;
+    const d = mc.clone().sub(c);
+    let off, stagger;
+    if (namedCount >= 3) {
+      const def = REAL_OFFSETS.find(([re]) => re.test(cleanName(m)));
+      off = new THREE.Vector3(...(def ? def[1] : [0, 0.1, 0]));
+      stagger = def ? def[2] : 0.1;
+    } else {
+      off = new THREE.Vector3(
+        d.x * 1.0,
+        d.y >= 0 ? d.y * 1.1 + 0.08 : Math.max(d.y * 0.6, -(mcY - 0.12)),
+        d.z * 2.6
+      );
+      if (off.length() > 1.35) off.setLength(1.35);
+      stagger = rnd() * 0.3;
+    }
+    m.parent.getWorldQuaternion(q).invert();
+    m.parent.getWorldScale(s);
+    off.applyQuaternion(q).divide(s);
+    m.userData.base = m.position.clone();
+    m.userData.off = off;
+    m.userData.stagger = stagger;
+    m.userData.label = frenchPartName(cleanName(m).split('|')[0].trim());
+    exploders.push(m);
+
+    /* les carénages reçoivent des matériaux dédiés pour le fondu au zoom */
+    if (/Flanc de carénage|Carénage avant/i.test(cleanName(m))) {
+      if (Array.isArray(m.material)) m.material = m.material.map(mm => mm.clone());
+      else m.material = m.material.clone();
+      fadeMeshes.push(m);
+    }
+    /* les volumes scannés couverts par une pièce vitrine seront substitués */
+    for (const sw of SWAPS) {
+      if (sw.re.test(cleanName(m))) sw.scanMeshes.push(m);
+    }
+  });
+
+  realG = model;
+  root.add(realG);
+  stylizedG.visible = false;          // le modèle réel EST la vue éclatée
+  applyExplode(state.explode);
+}
+
+async function tryLoadRealModel() {
+  const candidates = ['models/daytona.glb', 'models/daytona.gltf', 'models/scene.glb', 'models/scene.gltf'];
+  let url = null;
+  for (const u of candidates) {
+    try {
+      const head = await fetch(u, { method: 'HEAD' });
+      if (head.ok) { url = u; break; }
+    } catch { /* fichier absent */ }
+  }
+  if (!url) {
+    if (modelHint) modelHint.classList.add('show');
+    return;
+  }
+  const loaderEl = document.getElementById('loader');
+  const loaderMsg = loaderEl.querySelector('p');
+  loaderEl.classList.remove('done');
+  if (loaderMsg) loaderMsg.textContent = 'Chargement du modèle haute définition…';
+  try {
+    const gltfLoader = new GLTFLoader();
+    const draco = new DRACOLoader();
+    draco.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.6/');
+    gltfLoader.setDRACOLoader(draco);
+    const gltf = await gltfLoader.loadAsync(url, e => {
+      if (loaderMsg && e.loaded) {
+        loaderMsg.textContent = 'Chargement du modèle HD… ' + (e.loaded / 1048576).toFixed(1) + ' Mo';
+      }
+    });
+    setupRealModel(gltf.scene);
+    if (modelHint) modelHint.classList.remove('show');
+  } catch (err) {
+    console.error('Échec du chargement du modèle 3D :', err);
+    if (loaderMsg) loaderMsg.textContent = 'Échec du chargement du modèle 3D — maquette stylisée conservée.';
+    setTimeout(() => loaderEl.classList.add('done'), 1800);
+    return;
+  }
+  loaderEl.classList.add('done');
+}
+tryLoadRealModel();
+
+/* ============================================================
+   INTERACTION
+============================================================ */
+const state = {
+  rotY: -0.55, rotYT: -0.55,
+  explode: 0, explodeT: 0,
+  dist: 3.55, distT: 3.55,
+  autoSpin: false,
+  interacted: false,
+};
+const DIST_MIN = 1.7, DIST_MAX = 6.5;
+const VIEW_DIR = new THREE.Vector3(0, 0.22, 1).normalize();
+
+let dragging = false, lastX = 0, lastY = 0, dragDist = 0;
+const pointers = new Map();
+let pinchDist = 0;
+
+function firstTwoDist() {
+  const pts = [...pointers.values()];
+  return pts.length >= 2 ? Math.hypot(pts[0][0] - pts[1][0], pts[0][1] - pts[1][1]) : 0;
+}
+
+canvas.addEventListener('pointerdown', e => {
+  if (e.pointerType === 'mouse' && e.button !== 0) return;   // clic droit/molette : ignorés
+  state.interacted = true;
+  hideTip();
+  canvas.setPointerCapture(e.pointerId);
+  pointers.set(e.pointerId, [e.clientX, e.clientY]);
+  dragDist = 0;
+  if (pointers.size === 1) {
+    dragging = true;
+    lastX = e.clientX; lastY = e.clientY;
+    canvas.classList.add('dragging');
+  } else {
+    dragging = false;
+    pinchDist = firstTwoDist();
+  }
+});
+canvas.addEventListener('pointermove', e => {
+  if (pointers.has(e.pointerId)) pointers.set(e.pointerId, [e.clientX, e.clientY]);
+  if (pointers.size >= 2) {                                   // pince à 2+ doigts : zoom
+    const d = firstTwoDist();
+    if (pinchDist > 0 && d > 0) {
+      state.distT = THREE.MathUtils.clamp(state.distT * (pinchDist / d), DIST_MIN, DIST_MAX);
+    }
+    pinchDist = d;
+    return;
+  }
+  if (!dragging) {
+    if (pointers.size === 0 && e.pointerType === 'mouse') updateTip(e);
+    return;
+  }
+  const dx = e.clientX - lastX;
+  const dy = e.clientY - lastY;
+  lastX = e.clientX; lastY = e.clientY;
+  dragDist += Math.abs(dx) + Math.abs(dy);
+  state.rotYT += dx * 0.008;                                        // axe horizontal → rotation 360°
+  state.explodeT = THREE.MathUtils.clamp(state.explodeT - dy * 0.0035, 0, 1); // axe vertical → éclaté
+  hideTip();
+});
+function endPointer(e) {
+  pointers.delete(e.pointerId);
+  if (pointers.size === 0) {
+    dragging = false;
+    canvas.classList.remove('dragging');
+    pinchDist = 0;
+  } else if (pointers.size === 1) {
+    const [x, y] = [...pointers.values()][0];
+    dragging = true; lastX = x; lastY = y;
+    pinchDist = 0;
+  } else {
+    pinchDist = firstTwoDist();
+  }
+}
+canvas.addEventListener('pointerup', e => {
+  /* clic sans glisser → fiche pièce */
+  if (pointers.size === 1 && dragDist < 6) handlePartClick(e);
+  endPointer(e);
+});
+canvas.addEventListener('pointercancel', endPointer);
+canvas.addEventListener('lostpointercapture', endPointer);
+canvas.addEventListener('pointerleave', () => hideTip());
+canvas.addEventListener('contextmenu', e => e.preventDefault());
+
+canvas.addEventListener('wheel', e => {
+  e.preventDefault();
+  state.interacted = true;
+  state.distT = THREE.MathUtils.clamp(state.distT * Math.exp(e.deltaY * 0.0011), DIST_MIN, DIST_MAX);
+}, { passive: false });
+
+canvas.addEventListener('dblclick', () => { if (dragDist > 6) return; resetView(); });
+
+function resetView() {
+  state.rotYT = -0.55;
+  state.explodeT = 0;
+  state.distT = 3.55;
+}
+
+/* ============================================================
+   MODE CATALOGUE : à 0 % d'éclaté et aligné sur l'angle d'une
+   photo, la vraie photo se fond à l'écran ; toute interaction
+   (éclaté, rotation, zoom) ramène la 3D.
+============================================================ */
+const photoStage = document.getElementById('photoStage');
+const photoImg = document.getElementById('photoImg');
+const photoStations = [];
+/* Mode catalogue désactivé : l'expérience reste 100 % sur le modèle 3D.
+   Pour le réactiver, ajouter des entrées { base: 'photos/…', rotY: … }. */
+const PHOTO_DEFS = [];
+(async () => {
+  for (const def of PHOTO_DEFS) {
+    for (const ext of ['.jpg', '.jpeg', '.png', '.webp']) {
+      const url = def.base + ext;
+      try {
+        const head = await fetch(url, { method: 'HEAD' });
+        if (!head.ok) continue;
+        const img = new Image();
+        img.src = url;                                   // préchargement
+        photoStations.push({ url, abs: new URL(url, location.href).href, rotY: def.rotY });
+        break;
+      } catch { /* fichier absent */ }
+    }
+  }
+})();
+
+function angDiff(a, b) {
+  return Math.atan2(Math.sin(a - b), Math.cos(a - b));
+}
+
+let photoOn = false;
+function updatePhotoStage(dt) {
+  if (!photoStations.length) return;
+  /* aimantation douce vers l'angle photo le plus proche quand la moto est assemblée */
+  if (!dragging && !sliderDrag && !state.autoSpin && state.explodeT < 0.02) {
+    let bestSt = null, bestA = 0.3;
+    for (const st of photoStations) {
+      const d = Math.abs(angDiff(state.rotYT, st.rotY));
+      if (d < bestA) { bestA = d; bestSt = st; }
+    }
+    if (bestSt) state.rotYT -= angDiff(state.rotYT, bestSt.rotY) * Math.min(1, dt * 4);
+  }
+  /* opacité : proximité angulaire × assemblage × zoom proche du cadrage par défaut */
+  let best = 0, bestSt = null;
+  for (const st of photoStations) {
+    const wa = Math.max(0, 1 - Math.abs(angDiff(state.rotY, st.rotY)) / 0.14);
+    const we = Math.max(0, 1 - state.explode / 0.06);
+    const wd = Math.max(0, 1 - Math.abs(state.dist - 3.55) / 0.9);
+    const w = wa * we * wd;
+    if (w > best) { best = w; bestSt = st; }
+  }
+  const o = smooth(Math.min(1, best));
+  photoStage.style.opacity = o.toFixed(3);
+  if (bestSt && photoImg.src !== bestSt.abs) photoImg.src = bestSt.url;
+  const on = o > 0.5;
+  if (on !== photoOn) {
+    photoOn = on;
+    document.body.classList.toggle('photo', on);
+  }
+}
+
+/* ============================================================
+   FICHE PIÈCE : un clic sur un bloc affiche sa rubrique et le
+   lien vers le catalogue de pièces d'origine (pieces-triumph.com,
+   nomenclature Daytona 660 — la plus proche disponible).
+============================================================ */
+const CATALOG_ROOT = 'https://www.pieces-triumph.com/triumph-moto/Daytona/Daytona-660/daytona-660/159';
+const CATALOG_BASE = 'https://www.pieces-triumph.com/triumph-moto/Daytona/Daytona-660/daytona-660';
+const CATALOG = [
+  [/^Roue avant/i, 'Roues — avant', `${CATALOG_BASE}/ROUES/159/15900/0/159`],
+  [/^Roue arrière/i, 'Roues — arrière', `${CATALOG_BASE}/ROUES/159/15901/0/159`],
+  [/^Disque/i, 'Système de freinage', `${CATALOG_BASE}/SYSTEME-DE-FREINAGE/159/15970/0/159`],
+  [/^Fourche/i, 'Fourche & suspensions', `${CATALOG_BASE}/AMORTISSEUR/159/159111/0/159`],
+  [/^Carénage avant/i, 'Tête de fourche', `${CATALOG_BASE}/TETE-DE-FOURCHE/159/15923/0/159`],
+  [/^Flanc/i, 'Carénages', `${CATALOG_BASE}/CARENAGES/159/15920/0/159`],
+  [/^Selle/i, 'Selle & coque', `${CATALOG_BASE}/SELLE/159/15922/0/159`],
+  [/échappement|^Pot/i, 'Échappement', `${CATALOG_BASE}/ECHAPPEMENT/159/15995/0/159`],
+  [/^Bras oscillant/i, 'Bras oscillant', `${CATALOG_BASE}/BRAS-OSCILLANT-COMPLET/159/159110/0/159`],
+  [/Culasse|Couvre-culasse|Arbre à cames|bougie|admission/i, 'Culasse & soupapes', `${CATALOG_BASE}/CULASSE-ET-SOUPAPES/159/15913/0/159`],
+  [/Vilebrequin|Piston/i, 'Vilebrequin & pistons', `${CATALOG_BASE}/VILEBREQUIN/159/15912/0/159`],
+  [/Carter|Boîte|Bloc moteur|embrayage|alternateur|allumage|Démarreur|Filtre|Pompe|Pignon|huile|Durite/i, 'Carter moteur', `${CATALOG_BASE}/CARTER-MOTEUR/159/15981/0/159`],
+  [/^Cadre/i, 'Cadre et pièces', `${CATALOG_BASE}/CADRE-ET-PIECES/159/15954/0/159`],
+];
+
+const partCard = document.getElementById('partCard');
+const partName = document.getElementById('partName');
+const partCat = document.getElementById('partCat');
+const partLink = document.getElementById('partLink');
+document.getElementById('partClose').addEventListener('click', () => partCard.classList.remove('show'));
+
+function pickLabelAt(clientX, clientY) {
+  mouseNDC.set((clientX / window.innerWidth) * 2 - 1, -(clientY / window.innerHeight) * 2 + 1);
+  raycaster.setFromCamera(mouseNDC, camera);
+  const hits = raycaster.intersectObjects(root.children, true);
+  for (const h of hits) {
+    let hidden = false;
+    for (let w = h.object; w; w = w.parent) {
+      if (w.visible === false) { hidden = true; break; }
+    }
+    if (hidden) continue;
+    let o = h.object;
+    while (o && o !== root) {
+      if (o.userData.label) return o.userData.label;
+      o = o.parent;
+    }
+  }
+  return null;
+}
+
+function handlePartClick(e) {
+  const label = pickLabelAt(e.clientX, e.clientY);
+  if (!label) { partCard.classList.remove('show'); return; }
+  const entry = CATALOG.find(([re]) => re.test(label));
+  partName.textContent = label;
+  partCat.textContent = entry ? 'Rubrique : ' + entry[1] : 'Catalogue pièces d’origine';
+  partLink.href = entry ? entry[2] : CATALOG_ROOT;
+  partCard.classList.add('show');
+}
+
+/* ------- tooltip pièces ------- */
+const raycaster = new THREE.Raycaster();
+const mouseNDC = new THREE.Vector2();
+const tip = document.getElementById('tip');
+let tipTimer = null, tipX = 0, tipY = 0;
+function updateTip(e) {
+  tipX = e.clientX; tipY = e.clientY;
+  mouseNDC.set((tipX / window.innerWidth) * 2 - 1, -(tipY / window.innerHeight) * 2 + 1);
+  if (tipTimer) return;
+  tipTimer = setTimeout(() => {
+    tipTimer = null;
+    raycaster.setFromCamera(mouseNDC, camera);
+    const hits = raycaster.intersectObjects(root.children, true);
+    let label = null;
+    for (const h of hits) {
+      let hidden = false;
+      for (let w = h.object; w; w = w.parent) {
+        if (w.visible === false) { hidden = true; break; }
+      }
+      if (hidden) continue;
+      let o = h.object;
+      while (o && o !== root) {
+        if (o.userData.label) { label = o.userData.label; break; }
+        o = o.parent;
+      }
+      if (label) break;
+    }
+    if (label) {
+      tip.innerHTML = '<b>◆</b>&nbsp; ' + label;
+      tip.style.opacity = 1;
+      tip.style.left = (tipX + 16) + 'px';
+      tip.style.top = (tipY - 8) + 'px';
+    } else hideTip();
+  }, 40);
+}
+function hideTip() {
+  if (tipTimer) { clearTimeout(tipTimer); tipTimer = null; }
+  tip.style.opacity = 0;
+}
+
+/* ------- curseur vertical ------- */
+const slider = document.getElementById('slider');
+const sliderFill = slider.querySelector('.fill');
+const sliderKnob = slider.querySelector('.knob');
+let sliderDrag = false, sliderPointer = -1;
+function sliderFromEvent(e) {
+  const r = slider.getBoundingClientRect();
+  const v = THREE.MathUtils.clamp(1 - (e.clientY - r.top) / r.height, 0, 1);
+  state.explodeT = v;
+  state.interacted = true;
+}
+slider.addEventListener('pointerdown', e => {
+  if (e.pointerType === 'mouse' && e.button !== 0) return;
+  sliderDrag = true; sliderPointer = e.pointerId;
+  slider.setPointerCapture(e.pointerId);
+  sliderFromEvent(e);
+});
+slider.addEventListener('pointermove', e => { if (sliderDrag && e.pointerId === sliderPointer) sliderFromEvent(e); });
+const sliderEnd = e => { if (e.pointerId === sliderPointer) { sliderDrag = false; sliderPointer = -1; } };
+slider.addEventListener('pointerup', sliderEnd);
+slider.addEventListener('pointercancel', sliderEnd);
+slider.addEventListener('lostpointercapture', sliderEnd);
+slider.addEventListener('contextmenu', e => e.preventDefault());
+
+/* ------- boutons ------- */
+const btnExplode = document.getElementById('btnExplode');
+const btnSpin = document.getElementById('btnSpin');
+document.getElementById('btnReset').addEventListener('click', () => { state.interacted = true; resetView(); });
+btnExplode.addEventListener('click', () => {
+  state.interacted = true;
+  state.explodeT = state.explodeT > 0.5 ? 0 : 1;
+});
+btnSpin.addEventListener('click', () => {
+  state.interacted = true;
+  state.autoSpin = !state.autoSpin;
+  btnSpin.classList.toggle('on', state.autoSpin);
+});
+
+/* ------- HUD ------- */
+const pctEl = document.getElementById('pct');
+function syncHUD() {
+  const p = Math.round(state.explode * 100);
+  pctEl.textContent = p;
+  sliderFill.style.height = (state.explode * 100) + '%';
+  sliderKnob.style.bottom = (state.explode * 100) + '%';
+  btnExplode.classList.toggle('on', state.interacted && state.explodeT > 0.5);
+}
+
+/* ------- animation d'introduction : montre l'éclaté ------- */
+const INTRO = { start: performance.now() + 700, dur: 3200 };
+function introTick(now) {
+  if (state.interacted) return false;
+  const t = (now - INTRO.start) / INTRO.dur;
+  if (t < 0) return true;
+  if (t > 1) return false;
+  state.explodeT = Math.sin(t * Math.PI) * 0.55;
+  state.rotYT = -0.55 + smooth(t) * 0.5;
+  return true;
+}
+
+/* ============================================================
+   BOUCLE
+============================================================ */
+const clock = new THREE.Clock();
+let lastExplodeApplied = -1;
+
+function frame(now) {
+  requestAnimationFrame(frame);
+  const dt = Math.min(clock.getDelta(), 0.05);
+
+  introTick(now);
+  if (state.autoSpin && !dragging) state.rotYT += dt * 0.35;
+
+  updatePhotoStage(dt);
+
+  const k = 1 - Math.exp(-9 * dt);
+  state.rotY += (state.rotYT - state.rotY) * k;
+  state.explode += (state.explodeT - state.explode) * k;
+  state.dist += (state.distT - state.dist) * k;
+
+  root.rotation.y = state.rotY;
+
+  const reveal = THREE.MathUtils.clamp((2.7 - state.dist) / 0.6, 0, 1);
+
+  /* pièce vitrine (bloc moteur détaillé) : elle remplace le bloc scanné
+     UNIQUEMENT quand l'éclaté commence — assemblé (même zoomé « mécanique
+     à nu »), on garde le moteur scanné qui remplit exactement la baie sans
+     jeu. Le moteur détaillé n'apparaît donc que pour se séparer en pièces. */
+  if (realG) {
+    const showScan = state.explode < 0.08;
+    for (const sw of SWAPS) {
+      if (!sw.scanMeshes.length) continue;
+      if (sw.group.visible === showScan) {
+        sw.group.visible = !showScan;
+        for (const mm of sw.scanMeshes) mm.visible = showScan;
+      }
+    }
+  }
+
+  /* zoom fort → les carénages s'effacent, la mécanique apparaît */
+  if (fadeMeshes.length) {
+    const op = 1 - reveal;
+    for (const mesh of fadeMeshes) {
+      mesh.visible = op > 0.02;
+      const mats = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
+      for (const mm of mats) {
+        mm.opacity = op;
+        mm.transparent = op < 1;
+        mm.depthWrite = op >= 1;
+      }
+    }
+  }
+
+  if (Math.abs(state.explode - lastExplodeApplied) > 0.0004) {
+    applyExplode(state.explode);
+    lastExplodeApplied = state.explode;
+  }
+
+
+  /* cadrage : recule et vise plus haut quand la moto est éclatée ;
+     compense les écrans étroits (portrait) pour garder la moto entière */
+  const aspectComp = Math.max(1, 1.15 / camera.aspect);
+  const d = state.dist * (1 + 0.30 * state.explode) * aspectComp;
+  const targetY = 0.60 + 0.24 * state.explode;
+  camera.position.set(VIEW_DIR.x * d, targetY + VIEW_DIR.y * d, VIEW_DIR.z * d);
+  camera.lookAt(0, targetY, 0);
+
+  syncHUD();
+  renderer.render(scene, camera);
+}
+
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+/* hook de test / debug */
+window.daytona = {
+  set(rot, explode, dist) {
+    state.interacted = true;
+    if (rot !== undefined) { state.rotY = state.rotYT = rot; }
+    if (explode !== undefined) { state.explode = state.explodeT = explode; applyExplode(explode); }
+    if (dist !== undefined) { state.dist = state.distT = dist; }
+  },
+  state,
+  three: { renderer, scene, camera, root, stylizedG, getReal: () => realG },
+};
+
+applyExplode(0);
+requestAnimationFrame(frame);
+document.getElementById('loader').classList.add('done');
+</script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+Déposez ici le modèle 3D de la Daytona 675 sous l'un de ces noms :
+
+  daytona.glb      (recommandé — fichier unique)
+  daytona.gltf     (+ ses fichiers .bin et textures à côté)
+  scene.glb / scene.gltf  (nom par défaut des exports Sketchfab)
+
+Où trouver un modèle :
+
+1. GRATUIT (CC-BY, compte Sketchfab gratuit requis) :
+   « 2009 Triumph Daytona 675 » par williz.17
+   https://sketchfab.com/3d-models/2009-triumph-daytona-675-f9bddb06db154f26a57ee132c60791d2
+   → bouton « Download 3D model » → format « glTF » → dézipper ici.
+
+2. PREMIUM (qualité configurateur, édition SE noir/or) :
+   https://www.turbosquid.com/3d-models/triumph-daytona-675-se-3d-model-1870392
+   (formats 3ds Max/FBX — demandez-moi de le convertir en GLB après achat)
+
+La page http://localhost:8123 détecte le fichier automatiquement au rechargement :
+pièces éclatables, info-bulles et cadrage sont générés pour n'importe quel GLB.

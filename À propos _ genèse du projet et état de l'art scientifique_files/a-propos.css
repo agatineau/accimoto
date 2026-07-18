@@ -1,0 +1,139 @@
+/* =============================================================
+   A-PROPOS — styles propres a la page /a-propos/
+   Ce qui est partage (kpi-*, article-link, appels de note et
+   bibliographie) reste dans ressources.css, que la page charge aussi.
+   ============================================================= */
+
+.exp-icons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-md);
+    margin-top: var(--space-lg);
+    align-items: center;
+    justify-content: center;
+}
+.exp-icon svg {
+    width: 60px;
+    height: auto;
+}
+
+/* ===== Constats numerotes (etat de l'art) ===== */
+/* Colonne de lecture contrainte : la prose scientifique reste lisible
+   la ou .section-inner irait jusqu'a 1200px. */
+.constats {
+    max-width: 860px;
+    margin: 56px auto 0;
+    padding: 0;
+    list-style: none;
+}
+.constat {
+    display: grid;
+    grid-template-columns: 56px 1fr;
+    gap: 24px;
+    padding: 28px 0;
+    border-top: 1px solid var(--color-background-300);
+}
+.constat:last-child { border-bottom: 1px solid var(--color-background-300); }
+.constat-num {
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: var(--color-action-500);
+    opacity: .45;
+    line-height: 1.4;
+    font-variant-numeric: tabular-nums;
+}
+.constat h3 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--color-foreground);
+    line-height: 1.35;
+    margin: 0 0 10px;
+}
+.constat p {
+    font-size: .95rem;
+    line-height: 1.75;
+    color: var(--color-text-body);
+    margin: 0;
+}
+
+@media (max-width: 640px) {
+    .constat {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+    .constat-num { font-size: 1.1rem; }
+}
+
+/* ===== Principes de conception (page a-propos) ===== */
+/* Variante douce de .mps-card : cartes claires sur fond pale, numerotees
+   pour repondre visuellement aux constats de la section precedente.
+   .mps-card reste inchangee, elle sert aux pages ressources. */
+.principes {
+    background: var(--color-background-100);
+}
+.principes-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    max-width: 1040px;
+    margin: 0 auto;
+}
+.principe-card {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background: var(--color-background-50);
+    border: 1px solid var(--color-background-300);
+    border-radius: var(--radius-lg);
+    padding: 28px 28px 28px 40px;
+    box-shadow: 0 1px 2px rgba(3, 36, 92, .04), 0 8px 24px rgba(3, 36, 92, .05);
+}
+/* Chiffre fantome : quasi pleine hauteur, ancre en bas a gauche, rogne par le
+   bord de la carte et traverse par le texte. Tres basse opacite + leger flou
+   pour qu'il reste un fond et non un element a lire. */
+.principe-num {
+    position: absolute;
+    left: -.05em;
+    bottom: -.1em;
+    z-index: 0;
+    font-size: 12rem;
+    font-weight: 800;
+    line-height: .78;
+    letter-spacing: -.06em;
+    color: var(--color-content-500);
+    opacity: .11;
+    filter: blur(1px);
+    font-variant-numeric: tabular-nums;
+    pointer-events: none;
+    user-select: none;
+}
+/* Le contenu passe par-dessus le chiffre. */
+.principe-card h3,
+.principe-card p {
+    position: relative;
+    z-index: 1;
+}
+.principe-card h3 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--color-foreground);
+    line-height: 1.35;
+    margin: 0;
+}
+.principe-card p {
+    font-size: .92rem;
+    line-height: 1.7;
+    color: var(--color-text-body);
+    margin: 0;
+}
+
+@media (max-width: 900px) {
+    .principes-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 640px) {
+    .principe-card { padding: 24px 24px 24px 32px; }
+    .principe-num { font-size: 6.5rem; }
+}

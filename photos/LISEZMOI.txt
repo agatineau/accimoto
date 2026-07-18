@@ -1,0 +1,15 @@
+Déposez ici les photos officielles de la Daytona 675 SE (celles du chat) :
+
+  profil-gauche.jpg   → moto orientée vers la GAUCHE (côté « 675 TRIPLE » avec fourche or)
+  profil-droite.jpg   → moto orientée vers la DROITE
+  face.jpg            → vue de face (phares + rétroviseurs)
+  trois-quarts.jpg    → vue 3/4 avant
+
+Formats acceptés : .jpg, .jpeg, .png, .webp
+
+À quoi ça sert : quand la moto est ASSEMBLÉE (0 % d'éclaté) et alignée sur l'angle
+d'une photo, la vraie photo se fond à l'écran en plein cadre (mode catalogue, fond
+blanc). Dès que vous éclatez le moteur ou tournez la moto, la 3D reprend la main.
+Un aimantage doux ramène la rotation vers l'angle de la photo la plus proche.
+
+La vue de dessus n'est pas utilisée (la caméra ne passe jamais au zénith).

@@ -1,0 +1,757 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 401 575">
+  <!-- Generator: Adobe Illustrator 30.6.0, SVG Export Plug-In . SVG Version: 2.1.4 Build 109)  -->
+  <defs>
+    <style>
+      .st0 {
+        fill: none;
+      }
+
+      .st1 {
+        fill: url(#Dégradé_sans_nom_9);
+      }
+
+      .st2 {
+        fill: url(#Dégradé_sans_nom_6);
+      }
+
+      .st3 {
+        fill: url(#Dégradé_sans_nom_7);
+      }
+
+      .st4 {
+        fill: url(#Dégradé_sans_nom_4);
+      }
+
+      .st5 {
+        fill: url(#Dégradé_sans_nom_5);
+      }
+
+      .st6 {
+        fill: url(#Dégradé_sans_nom_2);
+      }
+
+      .st7 {
+        fill: url(#Dégradé_sans_nom_3);
+      }
+
+      .st8 {
+        fill: url(#Dégradé_sans_nom_8);
+      }
+
+      .st9 {
+        isolation: isolate;
+      }
+
+      .st10 {
+        clip-path: url(#clippath-17);
+      }
+
+      .st11 {
+        clip-path: url(#clippath-19);
+      }
+
+      .st12 {
+        clip-path: url(#clippath-11);
+      }
+
+      .st13 {
+        clip-path: url(#clippath-16);
+      }
+
+      .st14 {
+        clip-path: url(#clippath-18);
+      }
+
+      .st15 {
+        clip-path: url(#clippath-10);
+      }
+
+      .st16 {
+        clip-path: url(#clippath-15);
+      }
+
+      .st17 {
+        clip-path: url(#clippath-13);
+      }
+
+      .st18 {
+        clip-path: url(#clippath-14);
+      }
+
+      .st19 {
+        clip-path: url(#clippath-12);
+      }
+
+      .st20 {
+        clip-path: url(#clippath-31);
+      }
+
+      .st21 {
+        clip-path: url(#clippath-32);
+      }
+
+      .st22 {
+        clip-path: url(#clippath-33);
+      }
+
+      .st23 {
+        clip-path: url(#clippath-34);
+      }
+
+      .st24 {
+        clip-path: url(#clippath-35);
+      }
+
+      .st25 {
+        clip-path: url(#clippath-39);
+      }
+
+      .st26 {
+        clip-path: url(#clippath-30);
+      }
+
+      .st27 {
+        clip-path: url(#clippath-36);
+      }
+
+      .st28 {
+        clip-path: url(#clippath-37);
+      }
+
+      .st29 {
+        clip-path: url(#clippath-38);
+      }
+
+      .st30 {
+        clip-path: url(#clippath-27);
+      }
+
+      .st31 {
+        clip-path: url(#clippath-29);
+      }
+
+      .st32 {
+        clip-path: url(#clippath-26);
+      }
+
+      .st33 {
+        clip-path: url(#clippath-28);
+      }
+
+      .st34 {
+        clip-path: url(#clippath-20);
+      }
+
+      .st35 {
+        clip-path: url(#clippath-21);
+      }
+
+      .st36 {
+        clip-path: url(#clippath-22);
+      }
+
+      .st37 {
+        clip-path: url(#clippath-23);
+      }
+
+      .st38 {
+        clip-path: url(#clippath-24);
+      }
+
+      .st39 {
+        clip-path: url(#clippath-25);
+      }
+
+      .st40 {
+        mix-blend-mode: multiply;
+      }
+
+      .st41 {
+        fill: #425f6c;
+      }
+
+      .st42 {
+        clip-path: url(#clippath-1);
+      }
+
+      .st43 {
+        clip-path: url(#clippath-3);
+      }
+
+      .st44 {
+        clip-path: url(#clippath-4);
+      }
+
+      .st45 {
+        clip-path: url(#clippath-2);
+      }
+
+      .st46 {
+        clip-path: url(#clippath-7);
+      }
+
+      .st47 {
+        clip-path: url(#clippath-6);
+      }
+
+      .st48 {
+        clip-path: url(#clippath-9);
+      }
+
+      .st49 {
+        clip-path: url(#clippath-8);
+      }
+
+      .st50 {
+        clip-path: url(#clippath-5);
+      }
+
+      .st51 {
+        fill: #fff;
+      }
+
+      .st52 {
+        fill: url(#Dégradé_sans_nom);
+      }
+
+      .st53 {
+        fill: #cfd7d4;
+      }
+
+      .st54 {
+        fill: url(#Dégradé_sans_nom_19);
+      }
+
+      .st55 {
+        fill: url(#Dégradé_sans_nom_18);
+      }
+
+      .st56 {
+        fill: url(#Dégradé_sans_nom_13);
+      }
+
+      .st57 {
+        fill: url(#Dégradé_sans_nom_10);
+      }
+
+      .st58 {
+        fill: url(#Dégradé_sans_nom_12);
+      }
+
+      .st59 {
+        fill: url(#Dégradé_sans_nom_15);
+      }
+
+      .st60 {
+        fill: url(#Dégradé_sans_nom_11);
+      }
+
+      .st61 {
+        fill: url(#Dégradé_sans_nom_17);
+      }
+
+      .st62 {
+        fill: url(#Dégradé_sans_nom_14);
+      }
+
+      .st63 {
+        fill: url(#Dégradé_sans_nom_16);
+      }
+
+      .st64 {
+        fill: url(#Dégradé_sans_nom_28);
+      }
+
+      .st65 {
+        fill: url(#Dégradé_sans_nom_26);
+      }
+
+      .st66 {
+        fill: url(#Dégradé_sans_nom_25);
+      }
+
+      .st67 {
+        fill: url(#Dégradé_sans_nom_23);
+      }
+
+      .st68 {
+        fill: url(#Dégradé_sans_nom_20);
+      }
+
+      .st69 {
+        fill: url(#Dégradé_sans_nom_27);
+      }
+
+      .st70 {
+        fill: url(#Dégradé_sans_nom_24);
+      }
+
+      .st71 {
+        fill: url(#Dégradé_sans_nom_22);
+      }
+
+      .st72 {
+        fill: url(#Dégradé_sans_nom_21);
+      }
+
+      .st73 {
+        fill: #4db79f;
+      }
+
+      .st74 {
+        clip-path: url(#clippath);
+      }
+    </style>
+    <clipPath id="clippath">
+      <rect class="st0" y="-137" width="401" height="841"/>
+    </clipPath>
+    <clipPath id="clippath-1">
+      <rect class="st0" x="293.6" y="519.4" width="20.1" height="17.5"/>
+    </clipPath>
+    <clipPath id="clippath-2">
+      <rect class="st0" x="293.6" y="519.4" width="20.1" height="17.5"/>
+    </clipPath>
+    <linearGradient id="Dégradé_sans_nom" data-name="Dégradé sans nom" x1="0" y1="708.3" x2="1" y2="708.3" gradientTransform="translate(293.668 8849.285) scale(11.7474 -11.7474)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#9d9d9c"/>
+      <stop offset="0" stop-color="#b3b3b2"/>
+      <stop offset=".2" stop-color="#cecece"/>
+      <stop offset=".4" stop-color="#e4e4e3"/>
+      <stop offset=".5" stop-color="#f3f3f3"/>
+      <stop offset=".7" stop-color="#fcfcfc"/>
+      <stop offset="1" stop-color="#fff"/>
+    </linearGradient>
+    <clipPath id="clippath-3">
+      <rect class="st0" x="276.2" y="478.5" width="17.5" height="15"/>
+    </clipPath>
+    <clipPath id="clippath-4">
+      <rect class="st0" x="276.2" y="478.5" width="17.5" height="15"/>
+    </clipPath>
+    <linearGradient id="Dégradé_sans_nom_2" data-name="Dégradé sans nom 2" x1="-.4" y1="708" x2=".6" y2="708" gradientTransform="translate(-7716.2084 482.6163) rotate(90) scale(11.301 -11.301)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#9d9d9c"/>
+      <stop offset="0" stop-color="#b3b3b2"/>
+      <stop offset=".2" stop-color="#cecece"/>
+      <stop offset=".4" stop-color="#e4e4e3"/>
+      <stop offset=".5" stop-color="#f3f3f3"/>
+      <stop offset=".7" stop-color="#fcfcfc"/>
+      <stop offset="1" stop-color="#fff"/>
+    </linearGradient>
+    <clipPath id="clippath-5">
+      <rect class="st0" y="-137" width="401" height="841"/>
+    </clipPath>
+    <clipPath id="clippath-6">
+      <rect class="st0" x="164.3" y="508.8" width="23.9" height="17.5"/>
+    </clipPath>
+    <clipPath id="clippath-7">
+      <polygon class="st0" points="182.6 508.8 170.3 508.8 164.3 526.3 188.2 526.3 182.6 508.8"/>
+    </clipPath>
+    <linearGradient id="Dégradé_sans_nom_3" data-name="Dégradé sans nom 3" x1="0" y1="708.3" x2=".9" y2="708.3" gradientTransform="translate(-9756.8765 510.1015) rotate(90) scale(14.0234 -14.0234)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#9d9d9c"/>
+      <stop offset="0" stop-color="#b3b3b2"/>
+      <stop offset=".2" stop-color="#cecece"/>
+      <stop offset=".4" stop-color="#e4e4e3"/>
+      <stop offset=".5" stop-color="#f3f3f3"/>
+      <stop offset=".7" stop-color="#fcfcfc"/>
+      <stop offset="1" stop-color="#fff"/>
+    </linearGradient>
+    <clipPath id="clippath-8">
+      <rect class="st0" x="142.7" y="459.6" width="33.9" height="75.8"/>
+    </clipPath>
+    <clipPath id="clippath-9">
+      <polygon class="st0" points="176.6 490.4 168.6 459.6 142.7 535.5 161.2 535.5 176.6 490.4"/>
+    </clipPath>
+    <linearGradient id="Dégradé_sans_nom_4" data-name="Dégradé sans nom 4" x1="0" y1="707.6" x2=".9" y2="707.6" gradientTransform="translate(176.2471 -8044.3398) scale(-12.072 12.072)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#9d9d9c"/>
+      <stop offset="0" stop-color="#b3b3b2"/>
+      <stop offset=".2" stop-color="#cecece"/>
+      <stop offset=".4" stop-color="#e4e4e3"/>
+      <stop offset=".5" stop-color="#f3f3f3"/>
+      <stop offset=".7" stop-color="#fcfcfc"/>
+      <stop offset="1" stop-color="#fff"/>
+    </linearGradient>
+    <clipPath id="clippath-10">
+      <rect class="st0" x="238.1" y="508.8" width="28.8" height="24.3"/>
+    </clipPath>
+    <clipPath id="clippath-11">
+      <path class="st0" d="M266.9,529.4l-12.7-20.6s-5.6,5.4-16,7.4l10.5,16.8,18.3-3.7Z"/>
+    </clipPath>
+    <linearGradient id="Dégradé_sans_nom_5" data-name="Dégradé sans nom 5" x1="-.2" y1="708.2" x2=".8" y2="708.2" gradientTransform="translate(-10014.0246 514.2872) rotate(90) scale(14.4968 -14.4968)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#9d9d9c"/>
+      <stop offset="0" stop-color="#b3b3b2"/>
+      <stop offset=".2" stop-color="#cecece"/>
+      <stop offset=".4" stop-color="#e4e4e3"/>
+      <stop offset=".5" stop-color="#f3f3f3"/>
+      <stop offset=".7" stop-color="#fcfcfc"/>
+      <stop offset="1" stop-color="#fff"/>
+    </linearGradient>
+    <clipPath id="clippath-12">
+      <rect class="st0" x="215.2" y="477.8" width="17.5" height="21.7"/>
+    </clipPath>
+    <clipPath id="clippath-13">
+      <rect class="st0" x="215.2" y="477.8" width="17.5" height="21.7"/>
+    </clipPath>
+    <linearGradient id="Dégradé_sans_nom_6" data-name="Dégradé sans nom 6" x1="-.3" y1="708" x2=".7" y2="708" gradientTransform="translate(-10872.6665 481.7213) rotate(90) scale(15.6731 -15.6731)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#9d9d9c"/>
+      <stop offset="0" stop-color="#b3b3b2"/>
+      <stop offset=".2" stop-color="#cecece"/>
+      <stop offset=".4" stop-color="#e4e4e3"/>
+      <stop offset=".5" stop-color="#f3f3f3"/>
+      <stop offset=".7" stop-color="#fcfcfc"/>
+      <stop offset="1" stop-color="#fff"/>
+    </linearGradient>
+    <clipPath id="clippath-14">
+      <polygon class="st0" points="212 313.8 238.4 315.9 248.5 283 196.8 280.1 212 313.8"/>
+    </clipPath>
+    <linearGradient id="Dégradé_sans_nom_7" data-name="Dégradé sans nom 7" x1="0" y1="708" x2=".9" y2="708" gradientTransform="translate(-33523.5897 263.8806) rotate(90) scale(47.6665 -47.6665)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#e6ebeb"/>
+      <stop offset=".6" stop-color="#d6dedd"/>
+      <stop offset="1" stop-color="#c8d2d1"/>
+      <stop offset="1" stop-color="#c8d2d1"/>
+    </linearGradient>
+    <clipPath id="clippath-15">
+      <polygon class="st0" points="252.7 352.6 263.5 352.6 238.4 315.9 212 313.8 252.7 352.6"/>
+    </clipPath>
+    <linearGradient id="Dégradé_sans_nom_8" data-name="Dégradé sans nom 8" x1="0" y1="708" x2=".9" y2="708" gradientTransform="translate(-39539.221 285.69) rotate(90) scale(56.1813 -56.1813)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#e6ebeb"/>
+      <stop offset=".6" stop-color="#d6dedd"/>
+      <stop offset="1" stop-color="#c8d2d1"/>
+      <stop offset="1" stop-color="#c8d2d1"/>
+    </linearGradient>
+    <clipPath id="clippath-16">
+      <polygon class="st0" points="235.2 352.6 252.7 352.6 243.2 343.5 235.2 352.6"/>
+    </clipPath>
+    <linearGradient id="Dégradé_sans_nom_9" data-name="Dégradé sans nom 9" x1="0" y1="708" x2=".9" y2="708" gradientTransform="translate(-29324.6872 315.7544) rotate(90) scale(41.7636 -41.7636)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#e6ebeb"/>
+      <stop offset=".6" stop-color="#d6dedd"/>
+      <stop offset="1" stop-color="#c8d2d1"/>
+      <stop offset="1" stop-color="#c8d2d1"/>
+    </linearGradient>
+    <clipPath id="clippath-17">
+      <polygon class="st0" points="263.5 352.6 290.1 352.6 253.7 338.2 263.5 352.6"/>
+    </clipPath>
+    <linearGradient id="Dégradé_sans_nom_10" data-name="Dégradé sans nom 10" x1="0" y1="708" x2=".9" y2="708" gradientTransform="translate(-29296.7075 315.7544) rotate(90) scale(41.7636 -41.7636)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#e6ebeb"/>
+      <stop offset=".6" stop-color="#d6dedd"/>
+      <stop offset="1" stop-color="#c8d2d1"/>
+      <stop offset="1" stop-color="#c8d2d1"/>
+    </linearGradient>
+    <clipPath id="clippath-18">
+      <rect class="st0" y="-137" width="401" height="841"/>
+    </clipPath>
+    <clipPath id="clippath-19">
+      <polygon class="st0" points="185 65.9 221.6 91.2 185 81.2 185 102.6 211 127.6 184.6 120.4 184.6 143.8 247.9 177 283.4 136.1 259.2 66.5 185 39.9 185 65.9"/>
+    </clipPath>
+    <linearGradient id="Dégradé_sans_nom_11" data-name="Dégradé sans nom 11" x1="0" y1="708" x2="1" y2="708" gradientTransform="translate(184.5584 70062.3928) scale(98.7993 -98.7993)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#e6ebeb"/>
+      <stop offset=".6" stop-color="#d6dedd"/>
+      <stop offset="1" stop-color="#c8d2d1"/>
+      <stop offset="1" stop-color="#c8d2d1"/>
+    </linearGradient>
+    <clipPath id="clippath-20">
+      <polygon class="st0" points="282.2 159.3 323.3 227 333.9 118.6 312.7 98.7 282.2 159.3"/>
+    </clipPath>
+    <linearGradient id="Dégradé_sans_nom_12" data-name="Dégradé sans nom 12" x1="0" y1="708.1" x2="1" y2="708.1" gradientTransform="translate(-38481.6497 172.8042) rotate(90) scale(54.7822 -54.7822)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#e6ebeb"/>
+      <stop offset=".6" stop-color="#d6dedd"/>
+      <stop offset="1" stop-color="#c8d2d1"/>
+      <stop offset="1" stop-color="#c8d2d1"/>
+    </linearGradient>
+    <clipPath id="clippath-21">
+      <polygon class="st0" points="203.8 230.6 261 253.8 323.3 227 282.2 159.3 203.8 230.6"/>
+    </clipPath>
+    <linearGradient id="Dégradé_sans_nom_13" data-name="Dégradé sans nom 13" x1="0" y1="708" x2="1" y2="708" gradientTransform="translate(-65806.9099 172.6954) rotate(90) scale(93.3172 -93.3172)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#e6ebeb"/>
+      <stop offset=".6" stop-color="#d6dedd"/>
+      <stop offset="1" stop-color="#c8d2d1"/>
+      <stop offset="1" stop-color="#c8d2d1"/>
+    </linearGradient>
+    <clipPath id="clippath-22">
+      <polygon class="st0" points="261 253.8 248.5 283 323.3 227 261 253.8"/>
+    </clipPath>
+    <linearGradient id="Dégradé_sans_nom_14" data-name="Dégradé sans nom 14" x1="0" y1="708.1" x2="1" y2="708.1" gradientTransform="translate(248.4782 53237.5125) scale(74.8284 -74.8284)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#e6ebeb"/>
+      <stop offset=".6" stop-color="#d6dedd"/>
+      <stop offset="1" stop-color="#c8d2d1"/>
+      <stop offset="1" stop-color="#c8d2d1"/>
+    </linearGradient>
+    <clipPath id="clippath-23">
+      <polygon class="st0" points="203.8 230.6 282.2 159.3 273.4 140.2 203.8 230.6"/>
+    </clipPath>
+    <linearGradient id="Dégradé_sans_nom_15" data-name="Dégradé sans nom 15" x1="0" y1="708" x2="1" y2="708" gradientTransform="translate(277.2341 -41048.9365) scale(-58.2423 58.2423)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#e6ebeb"/>
+      <stop offset=".6" stop-color="#d6dedd"/>
+      <stop offset="1" stop-color="#c8d2d1"/>
+      <stop offset="1" stop-color="#c8d2d1"/>
+    </linearGradient>
+    <clipPath id="clippath-24">
+      <polygon class="st0" points="273.4 140.2 282.2 159.3 312.7 98.7 273.4 140.2"/>
+    </clipPath>
+    <linearGradient id="Dégradé_sans_nom_16" data-name="Dégradé sans nom 16" x1="0" y1="708.1" x2="1" y2="708.1" gradientTransform="translate(273.4209 27922.0837) scale(39.2501 -39.2501)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#e6ebeb"/>
+      <stop offset=".6" stop-color="#d6dedd"/>
+      <stop offset="1" stop-color="#c8d2d1"/>
+      <stop offset="1" stop-color="#c8d2d1"/>
+    </linearGradient>
+    <clipPath id="clippath-25">
+      <polygon class="st0" points="196.8 280.1 248.5 283 261 253.8 203.8 230.6 196.8 280.1"/>
+    </clipPath>
+    <linearGradient id="Dégradé_sans_nom_17" data-name="Dégradé sans nom 17" x1="-.1" y1="708" x2=".9" y2="708" gradientTransform="translate(243.3054 -24787.6948) scale(-35.3754 35.3754)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#e6ebeb"/>
+      <stop offset=".6" stop-color="#d6dedd"/>
+      <stop offset="1" stop-color="#c8d2d1"/>
+      <stop offset="1" stop-color="#c8d2d1"/>
+    </linearGradient>
+    <clipPath id="clippath-26">
+      <polygon class="st0" points="312.7 98.7 333.9 118.6 349.1 99.2 323.3 87.7 312.7 98.7"/>
+    </clipPath>
+    <linearGradient id="Dégradé_sans_nom_18" data-name="Dégradé sans nom 18" x1="0" y1="708.1" x2="1" y2="708.1" gradientTransform="translate(312.6711 25924.1422) scale(36.4646 -36.4646)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#e6ebeb"/>
+      <stop offset=".6" stop-color="#d6dedd"/>
+      <stop offset="1" stop-color="#c8d2d1"/>
+      <stop offset="1" stop-color="#c8d2d1"/>
+    </linearGradient>
+    <clipPath id="clippath-27">
+      <polygon class="st0" points="333.9 118.6 323.3 227 349.1 99.2 333.9 118.6"/>
+    </clipPath>
+    <linearGradient id="Dégradé_sans_nom_19" data-name="Dégradé sans nom 19" x1="0" y1="708" x2="1" y2="708" gradientTransform="translate(43686.3539 216.151) rotate(-90) scale(61.2327 -61.2327)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#e6ebeb"/>
+      <stop offset=".6" stop-color="#d6dedd"/>
+      <stop offset="1" stop-color="#c8d2d1"/>
+      <stop offset="1" stop-color="#c8d2d1"/>
+    </linearGradient>
+    <clipPath id="clippath-28">
+      <polygon class="st0" points="323.3 87.7 349.1 99.2 336.2 70.1 323.3 87.7"/>
+    </clipPath>
+    <linearGradient id="Dégradé_sans_nom_20" data-name="Dégradé sans nom 20" x1="0" y1="708.2" x2="1" y2="708.2" gradientTransform="translate(323.3066 18375.6857) scale(25.8291 -25.8291)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#e6ebeb"/>
+      <stop offset=".6" stop-color="#d6dedd"/>
+      <stop offset="1" stop-color="#c8d2d1"/>
+      <stop offset="1" stop-color="#c8d2d1"/>
+    </linearGradient>
+    <clipPath id="clippath-29">
+      <polygon class="st0" points="336.2 70.1 342.7 84.7 355.7 65.2 336.2 70.1"/>
+    </clipPath>
+    <linearGradient id="Dégradé_sans_nom_21" data-name="Dégradé sans nom 21" x1="0" y1="708.2" x2="1" y2="708.2" gradientTransform="translate(336.2211 13883.8181) scale(19.4984 -19.4984)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#e6ebeb"/>
+      <stop offset=".6" stop-color="#d6dedd"/>
+      <stop offset="1" stop-color="#c8d2d1"/>
+      <stop offset="1" stop-color="#c8d2d1"/>
+    </linearGradient>
+    <clipPath id="clippath-30">
+      <polygon class="st0" points="349.1 99.2 361.3 98.7 342.7 84.7 349.1 99.2"/>
+    </clipPath>
+    <linearGradient id="Dégradé_sans_nom_22" data-name="Dégradé sans nom 22" x1="0" y1="708.2" x2="1" y2="708.2" gradientTransform="translate(342.6784 13273.3505) scale(18.6122 -18.6122)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#e6ebeb"/>
+      <stop offset=".6" stop-color="#d6dedd"/>
+      <stop offset="1" stop-color="#c8d2d1"/>
+      <stop offset="1" stop-color="#c8d2d1"/>
+    </linearGradient>
+    <clipPath id="clippath-31">
+      <polygon class="st0" points="308.6 57.1 290.9 59.7 323.3 87.7 336.2 70.1 314.7 44.1 308.6 57.1"/>
+    </clipPath>
+    <linearGradient id="Dégradé_sans_nom_23" data-name="Dégradé sans nom 23" x1="0" y1="708.1" x2="1" y2="708.1" gradientTransform="translate(290.8936 32161.8346) scale(45.3276 -45.3276)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#e6ebeb"/>
+      <stop offset=".6" stop-color="#d6dedd"/>
+      <stop offset="1" stop-color="#c8d2d1"/>
+      <stop offset="1" stop-color="#c8d2d1"/>
+    </linearGradient>
+    <clipPath id="clippath-32">
+      <polygon class="st0" points="290.9 76.4 279.2 84.7 312.7 98.7 323.3 87.7 290.9 59.7 290.9 76.4"/>
+    </clipPath>
+    <linearGradient id="Dégradé_sans_nom_24" data-name="Dégradé sans nom 24" x1="0" y1="708.1" x2="1" y2="708.1" gradientTransform="translate(279.2451 31278.6678) scale(44.0614 -44.0614)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#e6ebeb"/>
+      <stop offset=".6" stop-color="#d6dedd"/>
+      <stop offset="1" stop-color="#c8d2d1"/>
+      <stop offset="1" stop-color="#c8d2d1"/>
+    </linearGradient>
+    <clipPath id="clippath-33">
+      <rect class="st0" y="-137" width="401" height="841"/>
+    </clipPath>
+    <clipPath id="clippath-34">
+      <polygon class="st0" points="150.5 94.6 197.7 115.7 150.5 115.7 150.5 137.1 184 155 150 155 150 178.4 231.6 194.4 273.4 140.2 246.2 80.8 150.5 74.4 150.5 94.6"/>
+    </clipPath>
+    <linearGradient id="Dégradé_sans_nom_25" data-name="Dégradé sans nom 25" x1="0" y1="708" x2="1" y2="708" gradientTransform="translate(76761.5658 147.1933) rotate(-90) scale(108.1268 -108.1268)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#e6ebeb"/>
+      <stop offset=".6" stop-color="#d6dedd"/>
+      <stop offset="1" stop-color="#c8d2d1"/>
+      <stop offset="1" stop-color="#c8d2d1"/>
+    </linearGradient>
+    <clipPath id="clippath-35">
+      <rect class="st0" y="-137" width="401" height="841"/>
+    </clipPath>
+    <clipPath id="clippath-36">
+      <polygon class="st0" points="79.6 188.1 200 257.4 203.8 230.6 101.2 177 79.6 188.1"/>
+    </clipPath>
+    <linearGradient id="Dégradé_sans_nom_26" data-name="Dégradé sans nom 26" x1="0" y1="708" x2="1" y2="708" gradientTransform="translate(79.6441 88112.0312) scale(124.1395 -124.1395)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#e6ebeb"/>
+      <stop offset=".6" stop-color="#d6dedd"/>
+      <stop offset="1" stop-color="#c8d2d1"/>
+      <stop offset="1" stop-color="#c8d2d1"/>
+    </linearGradient>
+    <clipPath id="clippath-37">
+      <polygon class="st0" points="203.8 230.6 223.1 205.5 101.2 177 203.8 230.6"/>
+    </clipPath>
+    <linearGradient id="Dégradé_sans_nom_27" data-name="Dégradé sans nom 27" x1="0" y1="708" x2="1" y2="708" gradientTransform="translate(101.2025 86508.5799) scale(121.8938 -121.8938)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#e6ebeb"/>
+      <stop offset=".6" stop-color="#d6dedd"/>
+      <stop offset="1" stop-color="#c8d2d1"/>
+      <stop offset="1" stop-color="#c8d2d1"/>
+    </linearGradient>
+    <clipPath id="clippath-38">
+      <polygon class="st0" points="79.6 252.3 110.2 205.7 79.6 188.1 79.6 252.3"/>
+    </clipPath>
+    <linearGradient id="Dégradé_sans_nom_28" data-name="Dégradé sans nom 28" x1="0" y1="708.1" x2="1" y2="708.1" gradientTransform="translate(79.6441 21829.2626) scale(30.5156 -30.5156)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#e6ebeb"/>
+      <stop offset=".6" stop-color="#d6dedd"/>
+      <stop offset="1" stop-color="#c8d2d1"/>
+      <stop offset="1" stop-color="#c8d2d1"/>
+    </linearGradient>
+    <clipPath id="clippath-39">
+      <rect class="st0" y="-137" width="401" height="841"/>
+    </clipPath>
+  </defs>
+  <g class="st9">
+    <g id="Calque_1">
+      <polygon class="st73" points="324.8 478.5 293.6 478.5 293.6 489.9 319 489.9 319 507.4 293.6 507.4 293.6 519.4 324.8 519.4 324.8 536.9 276.2 536.9 276.2 461.1 324.8 461 324.8 478.5"/>
+      <g class="st74">
+        <g class="st40">
+          <g class="st42">
+            <g class="st45">
+              <rect class="st52" x="293.6" y="519.4" width="20.1" height="17.5"/>
+            </g>
+          </g>
+        </g>
+        <g class="st40">
+          <g class="st43">
+            <g class="st44">
+              <rect class="st6" x="276.2" y="478.5" width="17.5" height="15"/>
+            </g>
+          </g>
+        </g>
+      </g>
+      <polygon class="st41" points="80.9 352.4 80.9 268.8 93.3 268.8 93.3 341.4 109.1 341.4 109.1 352.4 80.9 352.4"/>
+      <g class="st50">
+        <path class="st41" d="M144.8,352.4h-10.6c-.7-1.4-.7-3-.7-4.6h-.2c-2.3,3.9-4.1,5.4-8.8,5.4s-7.6-2.7-7.6-7.7v-22.5c0-13.6,16.3-6.5,16.3-23.6s.5-6.7-2.2-6.7-2.7,5.4-2.7,7.7v8.8h-11.4v-13.5c0-6.9,5.4-11.3,14-11.3s13.9,4.3,13.9,11.3v56.7ZM133.5,317.6c-3.2,1.9-5.4,3.3-5.4,6.8v16.9c.2,1.4,1.2,2.3,2.7,2.2,1.5-.2,2.7-1.2,2.7-2.7v-23.2Z"/>
+        <polygon class="st41" points="80.9 451.3 80.9 367.7 108.8 367.7 108.8 378.7 93.3 378.7 93.3 400.1 108.2 400.1 108.2 411.1 93.3 411.1 93.3 451.3 80.9 451.3"/>
+        <path class="st41" d="M117.8,451.3v-83.6h16.4c10,0,16.1,3.5,16.1,14.3v11.9c0,6.2-1.8,11.4-12.3,12.6v.2c5.5.7,11.4,2.6,11.8,10.2.7,11.2,0,22.9,2,34.4h-12.4c-2.1-9.6-1.5-22.2-1.5-31.9s-1.9-7-7.6-6.8v38.7h-12.4ZM130.2,402.4h2.4c4.3,0,5.3-2.3,5.3-5.4v-15.1c0-3.2-1.9-4.1-4.7-4.1h-2.9v24.6Z"/>
+        <polygon class="st41" points="161.9 451.3 161.9 367.7 189.5 367.7 189.5 378.7 174.3 378.7 174.3 400.1 189 400.1 189 411.1 174.3 411.1 174.3 440.4 189.8 440.4 189.8 451.3 161.9 451.3"/>
+        <path class="st41" d="M217.8,367.7l3.5,24.1c2.8,15.5,4.8,31.6,5.9,47.3h.5v-4.5c.1-8.1-.4-16.3-.4-24.4v-42.5h10.2v83.6h-18.4l-5.9-41.8c-2-10.3-2.7-19.7-3.7-29.6h-.5c0,3.6.2,7.3.3,10.8v60.6h-10.2v-83.6h18.6Z"/>
+        <path class="st41" d="M269.1,398.3v-17c0-4.2-1.3-5.2-3.7-5.2s-3.9.9-3.9,5.2v56.6c0,4.2,1.3,5.2,3.9,5.2s3.7-.9,3.7-5.2v-18.1h12.4v19.1c0,10.9-8.6,14.1-16.3,14.1s-16.2-3.2-16.2-14.1v-58.7c0-10.9,8.6-14.1,16.2-14.1s16.3,3.2,16.3,14.1v18.1h-12.4Z"/>
+        <polygon class="st41" points="293.2 451.3 293.2 367.7 305.6 367.7 305.6 399.8 312.5 399.8 312.5 367.7 324.9 367.7 324.9 451.3 312.5 451.3 312.5 410.7 305.6 410.7 305.6 451.3 293.2 451.3"/>
+        <path class="st73" d="M191.2,535.5l-3-9.2h-23.9l-3.1,9.2h-18.5l25.8-75.8h16.5l24.5,75.8h-18.4ZM170.3,508.8h12.3l-6-18.4-6.3,18.4Z"/>
+        <g class="st40">
+          <g class="st47">
+            <g class="st46">
+              <rect class="st7" x="164.7" y="503.7" width="23.1" height="27.6" transform="translate(-369.4 551.7) rotate(-74.8)"/>
+            </g>
+          </g>
+        </g>
+        <g class="st40">
+          <g class="st49">
+            <g class="st48">
+              <rect class="st4" x="134.4" y="456.7" width="50.5" height="81.6" transform="translate(-110.7 50.4) rotate(-13.4)"/>
+            </g>
+          </g>
+        </g>
+        <path class="st73" d="M238.1,516.2c-.9.1-1.8.2-2.7.3-.9,0-1.8.1-2.8.2v19.1h-17.5v-75.5h17.5c4.3,0,8.4.9,12.2,2.4,3.8,1.5,7.1,3.5,10,6.1,2.9,2.5,5.1,5.5,6.7,8.9,1.6,3.4,2.4,7,2.4,10.8s-.9,7.8-2.6,11.3c-1.7,3.5-4.1,6.5-7.2,9l16.7,27h-20.6l-12.2-19.6ZM232.6,499.2c1.9,0,3.6-.4,5.3-1,1.7-.6,3.2-1.4,4.4-2.3,1.3-1,2.3-2.1,3-3.4.7-1.3,1.1-2.6,1.1-4.1s-.4-2.8-1.1-4c-.7-1.2-1.7-2.3-3-3.3-1.3-1-2.8-1.7-4.4-2.3-1.7-.6-3.5-.9-5.3-1v21.4Z"/>
+        <g class="st40">
+          <g class="st15">
+            <g class="st12">
+              <rect class="st5" x="234.1" y="503.4" width="36.9" height="35" transform="translate(-218.1 183.8) rotate(-28.5)"/>
+            </g>
+          </g>
+        </g>
+        <g class="st40">
+          <g class="st19">
+            <g class="st17">
+              <rect class="st2" x="215.2" y="477.8" width="17.5" height="21.7"/>
+            </g>
+          </g>
+        </g>
+        <path class="st73" d="M116.2,535.4c-4.9,0-9.7-.9-14.3-2.7-4.6-1.8-8.8-4.6-12.6-8.3-3.6-3.7-6.3-7.8-8.2-12.3-1.9-4.6-2.8-9.4-2.8-14.5s.9-10,2.8-14.6c1.9-4.6,4.6-8.7,8.2-12.2,3.7-3.7,7.9-6.5,12.6-8.4,4.7-1.9,9.5-2.8,14.3-2.8s9.6.9,14.3,2.8c4.7,1.9,8.8,4.6,12.6,8.4l-12.3,12.3c-2-2-4.3-3.5-6.8-4.5-2.6-1-5.1-1.5-7.8-1.5s-5.2.5-7.7,1.5c-2.5,1-4.8,2.5-6.8,4.5-1.9,2-3.4,4.2-4.4,6.7-1,2.5-1.5,5.1-1.5,7.9s.5,5.4,1.5,7.8c1,2.4,2.5,4.7,4.4,6.7,2,2,4.3,3.5,6.8,4.5,2.5,1,5.1,1.5,7.7,1.5s5.2-.5,7.8-1.5c2.5-1,4.8-2.5,6.8-4.5l12.3,12.4c-3.7,3.7-7.9,6.5-12.5,8.3-4.6,1.8-9.4,2.7-14.4,2.7"/>
+      </g>
+      <g class="st18">
+        <rect class="st3" x="194.7" y="276.8" width="56" height="42.3" transform="translate(-37.4 32) rotate(-7.6)"/>
+      </g>
+      <g class="st16">
+        <rect class="st8" x="209.5" y="310.4" width="56.4" height="45.6" transform="translate(-44.7 37) rotate(-8.1)"/>
+      </g>
+      <g class="st13">
+        <rect class="st1" x="235.2" y="343.5" width="17.5" height="9.1"/>
+      </g>
+      <g class="st10">
+        <rect class="st57" x="253.7" y="338.2" width="36.5" height="14.4"/>
+      </g>
+      <g class="st14">
+        <polygon class="st53" points="185.9 248.5 170.3 268.5 161.3 306.6 152.3 303 168.1 343.5 169.8 310 178.6 291.3 199.8 286.8 196.8 280.1 200 257.4 185.9 248.5"/>
+      </g>
+      <g class="st11">
+        <rect class="st60" x="184.6" y="39.9" width="98.8" height="137.1"/>
+      </g>
+      <g class="st34">
+        <rect class="st58" x="243.7" y="136.6" width="128.7" height="52.5" transform="translate(143.3 469.9) rotate(-89.6)"/>
+      </g>
+      <g class="st35">
+        <rect class="st56" x="202.8" y="136.8" width="121.5" height="139.4" transform="translate(-2.7 409.6) rotate(-75.4)"/>
+      </g>
+      <g class="st36">
+        <rect class="st62" x="248.5" y="227" width="74.8" height="56"/>
+      </g>
+      <g class="st37">
+        <rect class="st59" x="186.4" y="126.6" width="113.2" height="117.5" transform="translate(-60.2 147.2) rotate(-30.2)"/>
+      </g>
+      <g class="st38">
+        <rect class="st63" x="273.4" y="98.7" width="39.2" height="60.7"/>
+      </g>
+      <g class="st39">
+        <rect class="st61" x="199.9" y="222.4" width="58.1" height="68.7" transform="translate(-47.7 461.2) rotate(-84.7)"/>
+      </g>
+      <g class="st32">
+        <rect class="st55" x="312.7" y="87.7" width="36.5" height="30.9"/>
+      </g>
+      <g class="st30">
+        <rect class="st54" x="284.3" y="106.6" width="103.9" height="112.9" transform="translate(-23.9 263.1) rotate(-41.4)"/>
+      </g>
+      <g class="st33">
+        <rect class="st68" x="323.3" y="70.1" width="25.8" height="29.1"/>
+      </g>
+      <g class="st31">
+        <rect class="st72" x="336.2" y="65.2" width="19.5" height="19.5"/>
+      </g>
+      <g class="st26">
+        <rect class="st71" x="342.7" y="84.7" width="18.6" height="14.5"/>
+      </g>
+      <g class="st20">
+        <rect class="st67" x="290.9" y="44.1" width="45.3" height="43.6"/>
+      </g>
+      <g class="st21">
+        <rect class="st70" x="279.2" y="59.7" width="44.1" height="39"/>
+      </g>
+      <g class="st22">
+        <path class="st51" d="M338.5,84.7c0,2.5-2.1,4.6-4.6,4.6s-4.6-2.1-4.6-4.6,2.1-4.6,4.6-4.6,4.6,2.1,4.6,4.6"/>
+      </g>
+      <g class="st23">
+        <rect class="st66" x="134.2" y="55.9" width="154.9" height="157" transform="translate(13.2 287.6) rotate(-70.1)"/>
+      </g>
+      <g class="st24">
+        <polygon class="st53" points="150.5 74.4 243.3 77.6 246.2 80.8 150.5 74.4"/>
+        <polygon class="st53" points="150.5 115.7 189.7 112.1 197.7 115.7 150.5 115.7"/>
+        <polygon class="st53" points="150 155 179.1 152.4 184 155 150 155"/>
+      </g>
+      <g class="st27">
+        <rect class="st65" x="79.6" y="177" width="124.1" height="80.4"/>
+      </g>
+      <g class="st28">
+        <rect class="st69" x="101.2" y="177" width="121.9" height="53.5"/>
+      </g>
+      <g class="st29">
+        <rect class="st64" x="79.6" y="188.1" width="30.5" height="64.2"/>
+      </g>
+      <g class="st25">
+        <polygon class="st53" points="100.2 220.9 104.1 238.3 116 209 110.2 205.7 100.2 220.9"/>
+        <polygon class="st53" points="79.6 188.1 110.2 205.7 106 212 79.6 188.1"/>
+      </g>
+      <rect class="st0" y="-137" width="401" height="841"/>
+    </g>
+  </g>
+</svg>

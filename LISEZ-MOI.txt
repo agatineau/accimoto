@@ -1,0 +1,35 @@
+🏍  ACCIMOTO — la Triumph Daytona en 3D
+========================================
+
+POUR DÉMARRER (Mac) :
+
+  1. Double-clique sur le fichier :  « Démarrer Accimoto.command »
+
+  2. Une petite fenêtre noire s'ouvre (c'est normal, ne la ferme pas)
+     et la moto 3D s'ouvre toute seule dans ton navigateur.
+
+  3. Pour arrêter : ferme simplement la fenêtre noire.
+
+
+LA PREMIÈRE FOIS, si le Mac dit qu'il ne peut pas ouvrir le fichier :
+
+  → Fais un CLIC DROIT sur « Démarrer Accimoto.command »
+    puis choisis « Ouvrir », et confirme « Ouvrir » dans la boîte
+    de dialogue. (À ne faire qu'une seule fois.)
+
+
+COMMENT ON JOUE AVEC LA MOTO :
+
+  • Glisser à l'horizontale ....... tourner la moto à 360°
+  • Glisser à la verticale ......... éclater / remonter le moteur
+  • Molette / pincer ............... zoomer
+  • Zoom rapproché ................. les carénages s'effacent (mécanique à nu)
+  • Double-clic .................... remettre la vue à zéro
+  • Survoler une pièce ............. son nom s'affiche
+  • Cliquer sur une pièce .......... sa fiche + lien catalogue
+
+
+Il faut une connexion internet au premier lancement
+(la librairie 3D se télécharge une fois).
+
+Bon voyage 😊
