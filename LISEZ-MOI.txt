@@ -1,7 +1,16 @@
 🏍  ACCIMOTO — la Triumph Daytona en 3D
 ========================================
 
-POUR DÉMARRER (Mac) :
+LE PLUS SIMPLE — depuis n'importe quel appareil (Mac, iPhone, iPad) :
+ouvre simplement ce lien dans ton navigateur :
+
+    https://agatineau.github.io/accimoto/
+
+(Rien à installer. Si tu préfères la version qui marche sans internet,
+ suis les étapes ci-dessous.)
+
+
+POUR DÉMARRER SANS INTERNET (Mac) :
 
   1. Double-clique sur le fichier :  « Démarrer Accimoto.command »
 
